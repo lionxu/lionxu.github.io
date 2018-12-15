@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>go语言中的容器 | LionFly Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="go语言提供了两个容器数据结构,数组和Map。 一、数组 (1)数组的定义 1234var arr1 [5]intarr2 := [3]int&amp;#123;1, 3, 5&amp;#125;arr3 := [...]int&amp;#123;2, 4, 6, 8, 10&amp;#125;var grid [4][5]int 数组的定义与变量类似，数组名写在前面，然后类型写在后面。不过,数组的大小写在方括号中,并且写在类型">
+<meta name="keywords" content="go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语言中的容器">
+<meta property="og:url" content="http://yoursite.com/2018/12/07/go语言中的容器/index.html">
+<meta property="og:site_name" content="LionFly Blog">
+<meta property="og:description" content="go语言提供了两个容器数据结构,数组和Map。 一、数组 (1)数组的定义 1234var arr1 [5]intarr2 := [3]int&amp;#123;1, 3, 5&amp;#125;arr3 := [...]int&amp;#123;2, 4, 6, 8, 10&amp;#125;var grid [4][5]int 数组的定义与变量类似，数组名写在前面，然后类型写在后面。不过,数组的大小写在方括号中,并且写在类型">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-15T07:43:09.441Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="go语言中的容器">
+<meta name="twitter:description" content="go语言提供了两个容器数据结构,数组和Map。 一、数组 (1)数组的定义 1234var arr1 [5]intarr2 := [3]int&amp;#123;1, 3, 5&amp;#125;arr3 := [...]int&amp;#123;2, 4, 6, 8, 10&amp;#125;var grid [4][5]int 数组的定义与变量类似，数组名写在前面，然后类型写在后面。不过,数组的大小写在方括号中,并且写在类型">
+  
+    <link rel="alternate" href="/atom.xml" title="LionFly Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">LionFly Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-go语言中的容器" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/07/go语言中的容器/" class="article-date">
+  <time datetime="2018-12-07T13:03:55.000Z" itemprop="datePublished">2018-12-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      go语言中的容器
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>go语言提供了两个容器数据结构,数组和Map。</p>
+<p><strong>一、数组</strong></p>
+<p>(1)数组的定义</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr1 [<span class="number">5</span>]<span class="keyword">int</span></span><br><span class="line">arr2 := [<span class="number">3</span>]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>&#125;</span><br><span class="line">arr3 := [...]<span class="keyword">int</span>&#123;<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>&#125;</span><br><span class="line"><span class="keyword">var</span> grid [<span class="number">4</span>][<span class="number">5</span>]<span class="keyword">int</span></span><br></pre></td></tr></table></figure>
+<p>数组的定义与变量类似，数组名写在前面，然后类型写在后面。不过,数组的大小写在方括号中,并且写在类型的前面。</p>
+<a id="more"></a>
+<p>(2)数组的遍历</p>
+<p>最简单的方式:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(arr3); i++ &#123;</span><br><span class="line">    fmt.Println(arr3[i])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用range关键字进行遍历:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> arr3 &#123;</span><br><span class="line">    fmt.Println(arr3[i])</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//可以同时取出index和value</span></span><br><span class="line"><span class="keyword">for</span> i, v := <span class="keyword">range</span> arr3 &#123;</span><br><span class="line">    fmt.Println(i, v)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//可以只取数组的value,然后忽略index</span></span><br><span class="line"><span class="keyword">for</span> _, v := <span class="keyword">range</span> arr3 &#123;</span><br><span class="line">    fmt.Println(v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上述示例中,我们用_来省略index的值。</p>
+<p>这种方法在go中其他地方也可以使用。</p>
+<p>(3)数组是一种值类型，在函数调用中传递数组是按照值传递的方式来传递数组</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printArray</span><span class="params">(arr [5]<span class="keyword">int</span>)</span></span>  &#123;</span><br><span class="line">	<span class="keyword">for</span> i, v := <span class="keyword">range</span> arr&#123;</span><br><span class="line">		fmt.Println(i, v)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上述函数中，我们需要传递一个有五个元素的数组，而且元素的类型为int。</p>
+<p>如果,我们在函数内部修改数组的元素，并不会影响原来数组的元素。</p>
+<p>如果，我们有需求，通过函数来修改数组的元素值，我们可以使用数组的指针来实现。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printArray</span><span class="params">(arr *[5]<span class="keyword">int</span>)</span></span>  &#123;</span><br><span class="line">	<span class="keyword">for</span> i, v := <span class="keyword">range</span> arr&#123;</span><br><span class="line">		fmt.Println(i, v)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//函数调用方式</span></span><br><span class="line">printArray(&amp;arr3)</span><br></pre></td></tr></table></figure>
+<p>注意:</p>
+<p>1、[10]int和[20]int是不同的类型</p>
+<p>2、调用func f(arr [10]int)会拷贝数组</p>
+<p>3、在go语言中一般不直接使用数组,常用的方式是切片</p>
+<p><strong>二、切片</strong></p>
+<p>在上一节中，如果我们想传递一个数组到一个函数中，并且希望在函数中对数组元素的修改能够影响函数外面的数组，这时我们使用的数组的指针。但是，我们在定义数组的指针时,需要指定数组的长度。</p>
+<p>这使用起来非常的不方便，其实通过数组的切片操作也可以实现，数组的切片本质上是数组元素的一个视图。</p>
+<p>示例代码如下:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arr := [...]<span class="keyword">int</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>&#125;</span><br><span class="line"></span><br><span class="line">s := arr[<span class="number">2</span>:<span class="number">6</span>]</span><br><span class="line"></span><br><span class="line">s[<span class="number">0</span>] = <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p>此时，在经过上面的操作之后，s[0]的值和arr[2]的值都变成了100。</p>
+<p>其中,s的元素是arr中index为2， 3， 4， 5的元素，即切片表示的范围是前开后闭的范围。</p>
+<p>更多示例:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 表示arr中index为2开始的所有元素</span></span><br><span class="line">s := arr[<span class="number">2</span>:]</span><br><span class="line"><span class="comment">// 表示arr中index小于6的所有元素</span></span><br><span class="line">s := arr[:<span class="number">6</span>]</span><br><span class="line"><span class="comment">// 表示arr中的所有元素</span></span><br><span class="line">s := arr[:]</span><br></pre></td></tr></table></figure>
+<p>切片作为函数参数传递,作用相当于传递数组指针，只不过切片可以指定范围。</p>
+<p>示例代码:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以切片作为参数的函数定义</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">updateSlice</span><span class="params">(arr []<span class="keyword">int</span>)</span></span>  &#123;</span><br><span class="line">	arr[<span class="number">0</span>] = <span class="number">100</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 上述函数的调用示例</span></span><br><span class="line">updateSlice(arr[<span class="number">2</span>:])</span><br><span class="line">updateSlice(arr[:<span class="number">6</span>])</span><br><span class="line">updateSlice(arr[:])</span><br></pre></td></tr></table></figure>
+<p>上述函数调用，会影响原来arr数组的元素的值。</p>
+<p>我们可以对slice再次进行slice操作，示例代码如下:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s2 := arr[:<span class="number">6</span>]</span><br><span class="line">s2 := s2[<span class="number">2</span>:]</span><br></pre></td></tr></table></figure>
+<p>每次，都是对上次的结果集进行切片操作.</p>
+<p>关于slice的扩展，可以向后扩展，但是不可以向前扩展，示例代码如下:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// s1的值为:2 3 4 5</span></span><br><span class="line">s1 := arr[<span class="number">2</span>, <span class="number">6</span>]</span><br><span class="line"><span class="comment">// s2的值为: 5 6</span></span><br><span class="line">s2 := s1[<span class="number">3</span>:<span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+<p>很显然,s2是对s1进行再次slice的结果，此处便是数组的slice的扩展结果。</p>
+<p>slice的扩展，只可以从其开始的下标，一直扩展到数组最后一个元素的下标。</p>
+<p>即，在s2对s1进行扩展的时候,可以一直扩展到数组下标9，即可以写成s1[3:9]，当然如果下标超过9，也会爆出数组下标越界的错误。</p>
+<p>但是，slice只可以向后扩展，不可以向前扩展，比如说s1[-1, 5]的写法就是错误的。</p>
+<p>下面来看下slice中的append操作:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 接着上面的示例代码演示操作</span></span><br><span class="line">s3 := <span class="built_in">append</span>(s2, <span class="number">10</span>)</span><br><span class="line">s4 := <span class="built_in">append</span>(s3, <span class="number">11</span>)</span><br><span class="line">s5 := <span class="built_in">append</span>(s4, <span class="number">12</span>)</span><br></pre></td></tr></table></figure>
+<p>在上述的append操作中,s3, s4, s5都会新增相应的元素。但是，并不会改变原来的arr数组，以及s2中的内容。</p>
+<p>在这里，append函数，每次操作都会返回新的数组，所以不会影响原来的数组。同时，我们如果想获得append操作的结果，自然也就需要去定义变量来接收函数的返回值。</p>
+<p>slice中的其他操作:</p>
+<p>如果，我们以切片的形式定义一个数组,那么这个数组相当于go语言中的nil。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 此处数组s相当于nil</span></span><br><span class="line"><span class="keyword">var</span> s[] <span class="keyword">int</span></span><br><span class="line"><span class="comment">// 切片定义数组的第二种方式</span></span><br><span class="line">s1 := []<span class="keyword">int</span>&#123;<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>使用make函数定义数组:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义数组，长度为16</span></span><br><span class="line">s2 := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">16</span>)</span><br><span class="line"><span class="comment">// 定义数组，长度为10，容量为32</span></span><br><span class="line">s3 := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">10</span>, <span class="number">32</span>)</span><br></pre></td></tr></table></figure>
+<p>数组的复制一般使用copy函数,</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 把s1中的元素复制到s2中</span></span><br><span class="line"><span class="built_in">copy</span>(s2, s1)</span><br></pre></td></tr></table></figure>
+<p>数组元素的删除操作:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除下标为3的元素</span></span><br><span class="line">s2 = <span class="built_in">append</span>(s2[:<span class="number">3</span>] + s2[<span class="number">4</span>:]...)</span><br><span class="line"><span class="comment">// 删除数组首元素</span></span><br><span class="line">s2 = s2[<span class="number">1</span>:]</span><br><span class="line"><span class="comment">// 删除数组尾元素的操作</span></span><br><span class="line">s2 = s2[:<span class="built_in">len</span>(s2)<span class="number">-1</span>]</span><br></pre></td></tr></table></figure>
+<p>删除操作采用append来实现，但是go语言的数组不支持+操作,所以s2[4:]后面的…表示可变长参数</p>
+<p>关于go语言中的len和cap操作</p>
+<p>len(s1)表示求取数组s1的长度。</p>
+<p>cap(s1)表示计算数组s1的容量。</p>
+<p><strong>三、map</strong></p>
+<p>1、map的定义</p>
+<p>示例代码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 直接定义</span></span><br><span class="line">m := <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>&#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"ccmouse"</span>,</span><br><span class="line">    <span class="string">"course"</span>: <span class="string">"golang"</span>,</span><br><span class="line">    <span class="string">"site"</span>: <span class="string">"imooc"</span>,</span><br><span class="line">    <span class="string">"quantity"</span>: <span class="string">"notbad"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用make函数创建map</span></span><br><span class="line">m2 := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>)</span><br><span class="line"><span class="keyword">var</span> m3 <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span></span><br></pre></td></tr></table></figure>
+<p>对于map的定义，一般的形式是map[k]V，当然我们也可以定义多重的map，map[k1]map[k2]V</p>
+<p>2、map的遍历</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 遍历map的k和v</span></span><br><span class="line"><span class="keyword">for</span> k, v := <span class="keyword">range</span> m &#123;</span><br><span class="line">    fmt.Println(k,v)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 只遍历map的k</span></span><br><span class="line"><span class="keyword">for</span> k := <span class="keyword">range</span> m &#123;</span><br><span class="line">    fmt.Println(k)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 只遍历map中的v(这种形式一般比较少用)</span></span><br><span class="line"><span class="keyword">for</span> _, v := <span class="keyword">range</span> m&#123;</span><br><span class="line">    fmt.Println(v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3、map中的值的获取</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过map[k]的形式获取</span></span><br><span class="line">courseName := m[<span class="string">"course"</span>]</span><br><span class="line"><span class="comment">// 如果k不在map中，则返回nil</span></span><br><span class="line">qq := m[<span class="string">"qq"</span>]</span><br><span class="line"><span class="comment">// 如果存在则flag为true，否则为false</span></span><br><span class="line">qq, flag = m[<span class="string">"qq"</span>]</span><br><span class="line"><span class="comment">// 可以利用if语句</span></span><br><span class="line"><span class="keyword">if</span> qq, flag := m[<span class="string">"qq"</span>]; flag&#123;</span><br><span class="line">    fmt.Println(qq)</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    fmt.Println(<span class="string">"does not exist"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4、获取map中元素的个数可以使用len函数,即len(m)</p>
+<p>5、删除map中某个k所对应的v，则delete(m, k)</p>
+<p>6、map使用hash表来存储元素，所以map中的key是无序的.</p>
+<p>7、map使用hash表,所以必须可以比较是否相等才可以作为key</p>
+<p>8、除了slice、map、function的內建类型之外的都可以作为key</p>
+<p>9、如果定义Struct类型，如果不包含上述三种內建类型，也可以作为k</p>
+<p><strong>四、字符串</strong></p>
+<p>go语言中关于字符串的处理，如果是英文字符和其他语言中并无不同，只是对于中文的处理比较特殊。</p>
+<p>对于中文字符串在go语言中的存储和处理，我们看下示例代码:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s := <span class="string">"YES我是一名码农"</span></span><br><span class="line"><span class="comment">// 用len函数求取一下字符串的长度</span></span><br><span class="line">fmt.Println(<span class="built_in">len</span>(s))</span><br></pre></td></tr></table></figure>
+<p>上述语句执行的结果是19.按照我们正常的理解,应该是9才对。</p>
+<p>在上述语句中，len函数求取的是字符串的字节的长度，而不是字符串本身的长度。</p>
+<p>在utf8编码中,一个汉字是三个字节。</p>
+<p>需要使用如下的方式获取正确的字符串长度</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmt.Println(utf8.RuneCountInString(s))</span><br></pre></td></tr></table></figure>
+<p>上述函数调用返回的结果是9，显然正确。utf8是go语言中一个专门用来处理utf8字符串的标准库.</p>
+<p>在go语言中,每一个多字节的字符存储为rune类型，4个字节，int32.</p>
+<p>我们可以通过如下方式来查看一下字符串中的每个字节:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> _, b := <span class="keyword">range</span> []<span class="keyword">byte</span>(s) &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%X "</span>, b)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println()</span><br></pre></td></tr></table></figure>
+<p>上述运行的结果为:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">59 45 53 E6 88 91 E4 B8 80 E5 90 8D E7 A0 81 E5 86 9C 21</span><br></pre></td></tr></table></figure>
+<p>下面，我们用range来迭代遍历输出每一个字符串:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i, ch := <span class="keyword">range</span> s&#123;</span><br><span class="line">    fmt.Printf(<span class="string">"(%d, %c)"</span>, i, ch)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println()</span><br></pre></td></tr></table></figure>
+<p>上述代码运行结果如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(0, Y)(1, E)(2, S)(3, 我)(6, 一)(9, 名)(12, 码)(15, 农)(18, !)</span><br></pre></td></tr></table></figure>
+<p>显然，上述结果中，单个字符的输出没有问题，但是字符的index不正确。一的index应该是4才对。</p>
+<p>上述，range函数返回的ch类型为int32，即为一个rune类型。但是，i的值表示的是每个字节的索引，而不是每个字符的索引。对于，单个的英文字符没有问题，但是对于占有多字节的汉字而言，就不是了。</p>
+<p>下面，我们用go语言中的rune类型来对字符串进行遍历。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i, ch := <span class="keyword">range</span> []<span class="keyword">rune</span>(s)&#123;</span><br><span class="line">    fmt.Printf(<span class="string">"(%d, %c) "</span>, i, ch)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println()</span><br></pre></td></tr></table></figure>
+<p>上述代码的运行结果如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(0, Y) (1, E) (2, S) (3, 我) (4, 一) (5, 名) (6, 码) (7, 农) (8, !)</span><br></pre></td></tr></table></figure>
+<p>显然，每个字符的index值都是符合我们的预期的。</p>
+<p>在上述代码中,我们把字符串转成了rune类型的数组。在go语言中,rune相当于int32，足够存储一个汉字。</p>
+<p>当然，在utf8标准库中也提供了对rune类型编码字符串进行解码的函数，看如下示例代码:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bytes := []<span class="keyword">byte</span>(s)</span><br><span class="line"><span class="keyword">for</span> <span class="built_in">len</span>(bytes) &gt; <span class="number">0</span> &#123;</span><br><span class="line">    ch, size := utf8.DecodeRune(bytes)</span><br><span class="line">    bytes = bytes[size:]</span><br><span class="line">    fmt.Printf(<span class="string">"(%c) "</span>, ch)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码运行结果如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(Y) (E) (S) (我) (一) (名) (码) (农) (!)</span><br></pre></td></tr></table></figure>
+<p>在上述代码中，我们首先把字符串转换成字节数组类型，然后调用utf8中的DecodeRune对相应的字节进行解码，返回相应的字符和字节长度。</p>
+<p>最后，在go语言中对字符串的其他操作,都是strings这个go语言的标准库中实现。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/07/go语言中的容器/" data-id="cjpp5n6g9000ahkvaszomsih0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/12/04/Spring-AOP的实现机制/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Spring AOP的实现机制</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring框架/">Spring框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Spring框架/" style="font-size: 20px;">Spring框架</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/12/07/go语言中的容器/">go语言中的容器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/04/Spring-AOP的实现机制/">Spring AOP的实现机制</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/02/go语言的基本语法/">go语言的基本语法</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/25/github中fork项目的更新/">github中fork项目的更新</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/18/Spring的Ioc容器之依赖注入管理/">Spring的Ioc容器之依赖注入管理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 LionFly<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
