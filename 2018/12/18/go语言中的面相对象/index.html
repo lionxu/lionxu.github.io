@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>go语言中的面相对象 | LionFly Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、结构体和方法 在go语言的面相对象中,仅支持封装,不支持继承和多态 在go语言中实现封装的是结构struct.  struct的定义 1234type treeNode struct&amp;#123;    value int    left, right *treeNode&amp;#125; 使用type和struct关键字定义结构">
+<meta name="keywords" content="go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语言中的面相对象">
+<meta property="og:url" content="http://yoursite.com/2018/12/18/go语言中的面相对象/index.html">
+<meta property="og:site_name" content="LionFly Blog">
+<meta property="og:description" content="一、结构体和方法 在go语言的面相对象中,仅支持封装,不支持继承和多态 在go语言中实现封装的是结构struct.  struct的定义 1234type treeNode struct&amp;#123;    value int    left, right *treeNode&amp;#125; 使用type和struct关键字定义结构">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-20T14:10:57.954Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="go语言中的面相对象">
+<meta name="twitter:description" content="一、结构体和方法 在go语言的面相对象中,仅支持封装,不支持继承和多态 在go语言中实现封装的是结构struct.  struct的定义 1234type treeNode struct&amp;#123;    value int    left, right *treeNode&amp;#125; 使用type和struct关键字定义结构">
+  
+    <link rel="alternate" href="/atom.xml" title="LionFly Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">LionFly Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-go语言中的面相对象" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/18/go语言中的面相对象/" class="article-date">
+  <time datetime="2018-12-18T14:25:57.000Z" itemprop="datePublished">2018-12-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      go语言中的面相对象
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>一、结构体和方法</strong></p>
+<p>在go语言的面相对象中,仅支持封装,不支持继承和多态</p>
+<p>在go语言中实现封装的是结构struct.</p>
+<ul>
+<li><p>struct的定义</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> treeNode <span class="keyword">struct</span>&#123;</span><br><span class="line">    value <span class="keyword">int</span></span><br><span class="line">    left, right *treeNode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用type和struct关键字定义结构</p>
+<a id="more"></a>
+</li>
+<li><p>struct类型对象的使用</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> root treeNode</span><br><span class="line">root = treeNode&#123;value: <span class="number">3</span>&#125;</span><br><span class="line">root.left = &amp;treeNode&#123;&#125;</span><br><span class="line">root.right = &amp;treeNode&#123;<span class="number">5</span>, <span class="literal">nil</span>, <span class="literal">nil</span>&#125;</span><br><span class="line">root.right.left = <span class="built_in">new</span>(treeNode)</span><br></pre></td></tr></table></figure>
+<p>有指定初始化列表的方式,有使用new函数的方式.如果初始化列表中什么也没指定,value的值为0，left和right的指针值为nil,当然new函数的调用结果也是如此.</p>
+</li>
+<li><p>使用工厂方法定义struct对象</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">createNode</span><span class="params">(value <span class="keyword">int</span>)</span> *<span class="title">treeNode</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &amp;treeNode&#123;value:value&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用工厂方法创建对象</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root.left.right = createNode(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>在上述例子中,我们使用了自定义的工厂函数,而且返回了局部变量的地址.</p>
+<p>在CPP中这是个错误的写法,但是在go语言中,局部变量是在栈上分配还是在堆上分配,由编译器决定。我们无需担忧，函数返回时,局部变量地址释放的问题.</p>
+</li>
+<li><p>为struct定义成员函数</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node treeNode)</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">    fmt.Println(node.value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *treeNode)</span> <span class="title">setValue</span><span class="params">(value <span class="keyword">int</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> node == <span class="literal">nil</span>&#123;</span><br><span class="line">        fmt.Println(<span class="string">"Setting value to nil node.Ignored"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    node.value = value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node treeNode)</span> <span class="title">getValue</span><span class="params">()</span> <span class="title">int</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> node.value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *treeNode)</span> <span class="title">traverse</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> node == <span class="literal">nil</span>&#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    node.left.traverse()</span><br><span class="line">    node.<span class="built_in">print</span>()</span><br><span class="line">    node.right.traverse()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上述成员函数的定义中,func后面紧跟的是方法接受者,可以是struct的对象,也可以是对象的指针.</p>
+<p>如果是对象，就是按照值传递过来的,如果是指针,就传递的是对象的地址.</p>
+</li>
+<li><p>成员函数的调用</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root.<span class="built_in">print</span>()</span><br><span class="line">root.getValue()</span><br><span class="line">root.setValue(<span class="number">3</span>)</span><br><span class="line">root.traverse()</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> pRoot *treeNode</span><br><span class="line">pRoot.<span class="built_in">print</span>()</span><br><span class="line">pRoot.setValue(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>由上述示例代码可知,不管接受者是对象还是指针,成员函数的调用方式不变.</p>
+<p>同时,在上述代码中,pRoot为nil指针,但是nil也可以调用成员函数.</p>
+</li>
+<li><p>关于go语言中成员函数的值接受者和指针接收者</p>
+<p>如果要改变对象的内容,必须使用指针接受者</p>
+<p>如果要传递的对象比较大,那么出于性能的考虑,也要使用指针接受者</p>
+<p>为了代码的一致性,如果代码中有使用指针接受者,最好是都使用指针接受者</p>
+</li>
+</ul>
+<p><strong>二、go语言中的包和封装</strong></p>
+<p>在go语言中给struct定义方法了之后,要对其进行封装.</p>
+<p>go语言采用驼峰式命名方法,用首字母大写表示public,用首字母小写来表示private</p>
+<p>在这里public和private是相对于package而言的。</p>
+<p>在go语言的项目中,一般一个目录中只能有一个包,报名和目录名未必相同.</p>
+<p>同时,package main包含程序的可执行入口.</p>
+<p>为struct定义的方法必须放在同一个包内，但是可以是不同的文件。</p>
+<p><strong>三、扩展已有类型</strong></p>
+<p>由于在go语言中不支持继承和多态,所以我们拓展系统的类型或者第三方库的类型有两种方法可选</p>
+<ul>
+<li>定义别名</li>
+<li>使用组合</li>
+</ul>
+<p>首先,我们来看使用组合来实现拓展,我们对上述的二叉树增加一个后续遍历的方法</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 我们定义一个新的类型</span></span><br><span class="line"><span class="keyword">type</span> MyTreeNode <span class="keyword">struct</span> &#123;</span><br><span class="line">	node *Node</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(myNode *MyTreeNode)</span> <span class="title">postOrder</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	<span class="keyword">if</span> myNode == <span class="literal">nil</span> || myNode.node == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	left := MyTreeNode&#123;myNode.node.Left&#125;</span><br><span class="line">	right := MyTreeNode&#123;myNode.node.Right&#125;</span><br><span class="line"></span><br><span class="line">	left.postOrder()</span><br><span class="line">	right.postOrder()</span><br><span class="line">	myNode.node.Print()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上述示例中,我们定义了一个新的类型,MyTreeNode,该类型含有一个属性,是一个指向原来类型的对象的指针.</p>
+<p>这样,便实现了对原有Node对象的扩展.</p>
+<p>其次,我们来看下使用别名来实现扩展,我们对go语言中的slice进行扩展实现一个后进先出的队列</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Queue []<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(q *Queue)</span> <span class="title">Push</span><span class="params">(value <span class="keyword">int</span>)</span></span>  &#123;</span><br><span class="line">	*q = <span class="built_in">append</span>(*q, value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(q *Queue)</span> <span class="title">Pop</span><span class="params">()</span> <span class="title">int</span></span>  &#123;</span><br><span class="line">	head := (*q)[<span class="number">0</span>]</span><br><span class="line">	*q = (*q)[<span class="number">1</span>:]</span><br><span class="line">	<span class="keyword">return</span> head</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(q *Queue)</span> <span class="title">IsEmpty</span><span class="params">()</span> <span class="title">bool</span></span>  &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">len</span>(*q) == <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//测试代码</span></span><br><span class="line">q := Queue&#123;<span class="number">1</span>&#125;</span><br><span class="line"></span><br><span class="line">q.Push(<span class="number">2</span>)</span><br><span class="line">q.Push(<span class="number">3</span>)</span><br><span class="line">fmt.Println(q.Pop())</span><br><span class="line">fmt.Println(q.Pop())</span><br><span class="line">fmt.Println(q.IsEmpty())</span><br><span class="line">fmt.Println(q.Pop())</span><br><span class="line">fmt.Println(q.IsEmpty())</span><br></pre></td></tr></table></figure>
+<p>从本质上来说,Queue就是一个go语言中slice的别名</p>
+<p><strong>四、关于GOPATH以及目录结构的设置</strong></p>
+<p>有关go语言中GOPATH的设置</p>
+<p>1、在类UNIX操作系统中,默认是在~/go目录下</p>
+<p>2、在windows操作系统中,默认是在%USERPROFILE%\go目录下</p>
+<p>在go语言中推荐的设置是,把所有项目和第三方库都放在同一个GOPATH下面</p>
+<p>但是,我们也可以将每个项目放在不同的GOPATH下面</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/18/go语言中的面相对象/" data-id="cjpwooywm0003gkva5bshzbv8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/12/07/go语言中的容器/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">go语言中的容器</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring框架/">Spring框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Spring框架/" style="font-size: 15px;">Spring框架</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/12/18/go语言中的面相对象/">go语言中的面相对象</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/07/go语言中的容器/">go语言中的容器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/04/Spring-AOP的实现机制/">Spring AOP的实现机制</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/02/go语言的基本语法/">go语言的基本语法</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/25/github中fork项目的更新/">github中fork项目的更新</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 LionFly<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
