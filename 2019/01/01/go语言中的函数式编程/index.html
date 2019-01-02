@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>go语言中的函数式编程 | LionFly Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、函数与闭包 在函数式编程语言中,函数的地位和变量相同,可以作为参数、变量和返回值来使用. 如果函数的参数与返回值都是函数,那么我们就可以实现高阶函数. 在比较pure的函数式编程中,需要满足以下两个条件:  不可变性,不能有状态，只能有常量和函数 函数只能有一个参数  go语言中闭包的实现: 123456789101112131415func adder() func(int) int&amp;#12">
+<meta name="keywords" content="go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语言中的函数式编程">
+<meta property="og:url" content="http://yoursite.com/2019/01/01/go语言中的函数式编程/index.html">
+<meta property="og:site_name" content="LionFly Blog">
+<meta property="og:description" content="一、函数与闭包 在函数式编程语言中,函数的地位和变量相同,可以作为参数、变量和返回值来使用. 如果函数的参数与返回值都是函数,那么我们就可以实现高阶函数. 在比较pure的函数式编程中,需要满足以下两个条件:  不可变性,不能有状态，只能有常量和函数 函数只能有一个参数  go语言中闭包的实现: 123456789101112131415func adder() func(int) int&amp;#12">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-02T13:54:13.760Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="go语言中的函数式编程">
+<meta name="twitter:description" content="一、函数与闭包 在函数式编程语言中,函数的地位和变量相同,可以作为参数、变量和返回值来使用. 如果函数的参数与返回值都是函数,那么我们就可以实现高阶函数. 在比较pure的函数式编程中,需要满足以下两个条件:  不可变性,不能有状态，只能有常量和函数 函数只能有一个参数  go语言中闭包的实现: 123456789101112131415func adder() func(int) int&amp;#12">
+  
+    <link rel="alternate" href="/atom.xml" title="LionFly Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">LionFly Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-go语言中的函数式编程" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/01/go语言中的函数式编程/" class="article-date">
+  <time datetime="2019-01-01T06:00:25.000Z" itemprop="datePublished">2019-01-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      go语言中的函数式编程
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>一、函数与闭包</strong></p>
+<p>在函数式编程语言中,函数的地位和变量相同,可以作为参数、变量和返回值来使用.</p>
+<p>如果函数的参数与返回值都是函数,那么我们就可以实现高阶函数.</p>
+<p>在比较pure的函数式编程中,需要满足以下两个条件:</p>
+<ul>
+<li>不可变性,不能有状态，只能有常量和函数</li>
+<li>函数只能有一个参数</li>
+</ul>
+<p>go语言中闭包的实现:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">adder</span><span class="params">()</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span>)</span> <span class="title">int</span></span>&#123;</span><br><span class="line">    sum := <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(v <span class="keyword">int</span>)</span> <span class="title">int</span></span>&#123;</span><br><span class="line">        sum += v</span><br><span class="line">        <span class="keyword">return</span> sum</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用比较pure一些的函数式编程风格实现</span></span><br><span class="line"><span class="keyword">type</span> iAdder <span class="function"><span class="keyword">func</span><span class="params">(<span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">int</span>, iAdder)</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">adder2</span><span class="params">(base <span class="keyword">int</span>)</span> <span class="title">iAdder</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(v <span class="keyword">int</span>)</span> <span class="params">(<span class="keyword">int</span>, iAdder)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> base + v, adder2(base + v)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>python语言中闭包的实现:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">adder</span><span class="params">()</span>:</span></span><br><span class="line">    sum = <span class="number">0</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(value)</span>:</span></span><br><span class="line">        <span class="keyword">nonlocal</span> sum</span><br><span class="line">        sum += value</span><br><span class="line">        <span class="keyword">return</span> sum</span><br><span class="line">    <span class="keyword">return</span> f</span><br></pre></td></tr></table></figure>
+<p>C++语言中关于闭包的实现:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">adder</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> [=] (<span class="keyword">int</span> value) <span class="keyword">mutable</span>&#123;</span><br><span class="line">        sum += value;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Java语言中关于闭包的实现:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Function&lt;Integer, Integer&gt; <span class="title">adder</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Holder&lt;Integer&gt; sum = <span class="keyword">new</span> Holder&lt;&gt;(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> (Integer value) -&gt;&#123;</span><br><span class="line">        sum.value += value;</span><br><span class="line">        <span class="keyword">return</span> sum.value;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>二、使用go语言中的闭包实现斐波那切数列</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"bufio"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"io"</span></span><br><span class="line">	<span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> intGen <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">int</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">fibonacci</span><span class="params">()</span> <span class="title">intGen</span></span>  &#123;</span><br><span class="line">	a, b := <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">		a, b = b, a + b</span><br><span class="line">		<span class="keyword">return</span> a</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(g intGen)</span> <span class="title">Read</span><span class="params">(p []<span class="keyword">byte</span>)</span><span class="params">(n <span class="keyword">int</span>, err error)</span></span>  &#123;</span><br><span class="line">	next := g()</span><br><span class="line">	<span class="keyword">if</span> next &gt; <span class="number">10000</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>, io.EOF</span><br><span class="line">	&#125;</span><br><span class="line">	s := fmt.Sprintf(<span class="string">"%d\n"</span>, next)</span><br><span class="line">	<span class="keyword">return</span> strings.NewReader(s).Read(p)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printFileContents</span><span class="params">(reader io.Reader)</span></span>  &#123;</span><br><span class="line">	scanner := bufio.NewScanner(reader)</span><br><span class="line">	<span class="keyword">for</span> scanner.Scan()  &#123;</span><br><span class="line">		fmt.Println(scanner.Text())</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	g := fibonacci()</span><br><span class="line">	printFileContents(g)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中,我们定义了一个生成菲波那切数列的函数,同时使用函数实现了Reader接口,将函数的输出用io的形式进行封装.</p>
+<p><strong>三、使用go语言中的闭包实现递归遍历二叉树</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 节点的定义</span></span><br><span class="line"><span class="keyword">package</span> tree</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Node <span class="keyword">struct</span> &#123;</span><br><span class="line">	Value <span class="keyword">int</span></span><br><span class="line">	Left, Right *Node</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node Node)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Print(node.Value, <span class="string">" "</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *Node)</span> <span class="title">SetValue</span><span class="params">(value <span class="keyword">int</span>)</span></span>  &#123;</span><br><span class="line">	<span class="keyword">if</span> node == <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">"Setting Value to nil node. Ignored"</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	node.Value = value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 成员函数的实现</span></span><br><span class="line"><span class="keyword">package</span> tree</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *Node)</span> <span class="title">TraverseFunc</span><span class="params">(f <span class="keyword">func</span>(n *Node)</span>)</span>  &#123;</span><br><span class="line">	<span class="keyword">if</span> node == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	node.Left.TraverseFunc(f)</span><br><span class="line">	f(node)</span><br><span class="line">	node.Right.TraverseFunc(f)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(node *Node)</span> <span class="title">Traverse</span><span class="params">()</span></span> &#123;</span><br><span class="line">	node.TraverseFunc(<span class="function"><span class="keyword">func</span><span class="params">(n *Node)</span></span> &#123;</span><br><span class="line">		n.Print()</span><br><span class="line">	&#125;)</span><br><span class="line">	fmt.Println()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用示例</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"tree"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	<span class="keyword">var</span> root tree.Node</span><br><span class="line"></span><br><span class="line">	root = tree.Node&#123;Value:<span class="number">3</span>&#125;</span><br><span class="line">	root.Left = &amp;tree.Node&#123;&#125;</span><br><span class="line">	root.Right = &amp;tree.Node&#123;Value: <span class="number">5</span>&#125;</span><br><span class="line">	root.Right.Left = <span class="built_in">new</span>(tree.Node)</span><br><span class="line">	root.Left.Right = &amp;tree.Node&#123;Value:<span class="number">2</span>&#125;</span><br><span class="line">	root.Right.Left.SetValue(<span class="number">4</span>)</span><br><span class="line">	root.Traverse()</span><br><span class="line">	nodeCount := <span class="number">0</span></span><br><span class="line">	root.TraverseFunc(<span class="function"><span class="keyword">func</span><span class="params">(n *tree.Node)</span></span> &#123;</span><br><span class="line">		nodeCount++</span><br><span class="line">	&#125;)</span><br><span class="line">	fmt.Println(nodeCount)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/01/go语言中的函数式编程/" data-id="cjqf8tqsm0003a8vanu8dijel" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/12/26/go语言中的接口/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">go语言中的接口</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring框架/">Spring框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Spring框架/" style="font-size: 15px;">Spring框架</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/01/01/go语言中的函数式编程/">go语言中的函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/go语言中的接口/">go语言中的接口</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/18/go语言中的面相对象/">go语言中的面相对象</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/07/go语言中的容器/">go语言中的容器</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/04/Spring-AOP的实现机制/">Spring AOP的实现机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 LionFly<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
