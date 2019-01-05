@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>go语言中的错误处理和资源管理 | LionFly Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、go语言中的defer调用 defer调用的特性简介:  实现资源管理,确保在函数调用结束时调用defer语句 参数在执行defer语句时计算 defer语句列表为后进先出类似于栈结构  defer的使用场景:  Open/Close Lock/UnLock PrintHeader/PrintFooter  示例代码: 1234567891011121314151617181920212223">
+<meta name="keywords" content="go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语言中的错误处理和资源管理">
+<meta property="og:url" content="http://yoursite.com/2019/01/03/go语言中的错误处理和资源管理/index.html">
+<meta property="og:site_name" content="LionFly Blog">
+<meta property="og:description" content="一、go语言中的defer调用 defer调用的特性简介:  实现资源管理,确保在函数调用结束时调用defer语句 参数在执行defer语句时计算 defer语句列表为后进先出类似于栈结构  defer的使用场景:  Open/Close Lock/UnLock PrintHeader/PrintFooter  示例代码: 1234567891011121314151617181920212223">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-05T14:12:00.224Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="go语言中的错误处理和资源管理">
+<meta name="twitter:description" content="一、go语言中的defer调用 defer调用的特性简介:  实现资源管理,确保在函数调用结束时调用defer语句 参数在执行defer语句时计算 defer语句列表为后进先出类似于栈结构  defer的使用场景:  Open/Close Lock/UnLock PrintHeader/PrintFooter  示例代码: 1234567891011121314151617181920212223">
+  
+    <link rel="alternate" href="/atom.xml" title="LionFly Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">LionFly Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-go语言中的错误处理和资源管理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/03/go语言中的错误处理和资源管理/" class="article-date">
+  <time datetime="2019-01-03T13:21:52.000Z" itemprop="datePublished">2019-01-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      go语言中的错误处理和资源管理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>一、go语言中的defer调用</strong></p>
+<p>defer调用的特性简介:</p>
+<ul>
+<li>实现资源管理,确保在函数调用结束时调用defer语句</li>
+<li>参数在执行defer语句时计算</li>
+<li>defer语句列表为后进先出类似于栈结构</li>
+</ul>
+<p>defer的使用场景:</p>
+<ul>
+<li>Open/Close</li>
+<li>Lock/UnLock</li>
+<li>PrintHeader/PrintFooter</li>
+</ul>
+<p>示例代码:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"bufio"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">writeFile</span><span class="params">(filename <span class="keyword">string</span>)</span></span>  &#123;</span><br><span class="line">	file, err := os.Create(filename)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> file.Close()</span><br><span class="line"></span><br><span class="line">	writer := bufio.NewWriter(file)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> writer.Flush()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">20</span>; i++ &#123;</span><br><span class="line">		fmt.Fprintln(writer, i)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此处两个defer语句，在函数结束时,Flush先执行,实现内存与磁盘的数据同步,Close语句后执行,用于关闭文件.</p>
+<a id="more"></a>
+<p><strong>二、go语言中的错误处理</strong></p>
+<p>示例代码</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">"os"</span></span><br><span class="line">file, err := os.Open(<span class="string">"abc.txt"</span>)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> pathError, ok := err.(*os.PathError); ok &#123;</span><br><span class="line">        fmt.Println(pathError.Err)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        fmt.Println(<span class="string">"unknown error"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>主要是处理已知类型的错误</p>
+<p><strong>三、go语言中实现错误的统一处理</strong></p>
+<p>下面以实现一个列出文件内容的web服务器为例来说明如何进行统一的错误处理</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 业务逻辑代码</span></span><br><span class="line"><span class="keyword">package</span> filelisting</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"io/ioutil"</span></span><br><span class="line">	<span class="string">"net/http"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">HandleFileList</span><span class="params">(writer http.ResponseWriter, request *http.Request)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	path := request.URL.Path[<span class="built_in">len</span>(<span class="string">"/list/"</span>):]</span><br><span class="line">	file, err := os.Open(path)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> file.Close()</span><br><span class="line"></span><br><span class="line">	all, err := ioutil.ReadAll(file)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	writer.Write(all)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 服务器以及错误处理代码</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"errorhandling/filelistingserver/filelisting"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">	<span class="string">"net/http"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> appHandler <span class="function"><span class="keyword">func</span><span class="params">(writer http.ResponseWriter, request *http.Request)</span> <span class="title">error</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">errorWrapper</span><span class="params">(handler appHandler)</span> <span class="title">func</span><span class="params">(w http.ResponseWriter,</span></span></span><br><span class="line"><span class="function"><span class="params">	r *http.Request)</span></span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">			err := handler(w, r)</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				log.Printf(<span class="string">"Error handling request: %s"</span>, err.Error())</span><br><span class="line">				code := http.StatusOK</span><br><span class="line">				<span class="keyword">switch</span> &#123;</span><br><span class="line">				<span class="keyword">case</span> os.IsNotExist(err):</span><br><span class="line">					code = http.StatusNotFound</span><br><span class="line">				<span class="keyword">case</span> os.IsPermission(err):</span><br><span class="line">					code = http.StatusForbidden</span><br><span class="line">				<span class="keyword">default</span>:</span><br><span class="line">					code = http.StatusInternalServerError</span><br><span class="line">				&#125;</span><br><span class="line">				http.Error(w, http.StatusText(code), code)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	http.HandleFunc(<span class="string">"/list/"</span>, errorWrapper(filelisting.HandleFileList))</span><br><span class="line">	err := http.ListenAndServe(<span class="string">":8888"</span>, <span class="literal">nil</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span>&#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里,我们使用了函数式编程的方法,把错误处理封装在一个errorWrapper函数中,来实现对错误的统一处理.</p>
+<p><strong>三、go语言中的panic和recover</strong></p>
+<p>go语言中的panic和recover与其他语言中的throw和catch的功能类似</p>
+<p>panic的主要作用如下:</p>
+<ul>
+<li>停止当前函数执行</li>
+<li>一直向上返回,执行每一层的defer</li>
+<li>如果没有recover,程序直接退出</li>
+<li>功能类似于其他语言中的throw</li>
+</ul>
+<p>recover的主要作用如下:</p>
+<ul>
+<li>仅在defer函数中使用</li>
+<li>获取panic的值</li>
+<li>如果无法处理可以重新panic</li>
+</ul>
+<p>panic和recover的示例代码如下:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">tryRecover</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		r := <span class="built_in">recover</span>()</span><br><span class="line">		<span class="keyword">if</span> err, ok := r.(error); ok&#123;</span><br><span class="line">			fmt.Println(<span class="string">"Error occurred: "</span>, err)</span><br><span class="line">		&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="built_in">panic</span>(r)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	b := <span class="number">0</span></span><br><span class="line">	a := <span class="number">5</span> / b</span><br><span class="line">	fmt.Println(a)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	tryRecover()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们在tryRecover函数中,使用0作为除法的除数,这样造成一个panic,然后在defer中使用匿名函数来调用recover</p>
+<p><strong>四、go语言中的错误处理综合运用</strong></p>
+<p>我们以对前面的web服务器的代码进行改进为示例展示错误处理:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 业务逻辑处理</span></span><br><span class="line"><span class="keyword">package</span> filelisting</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"io/ioutil"</span></span><br><span class="line">	<span class="string">"net/http"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">	<span class="string">"strings"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> prefix  = <span class="string">"/list/"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> userError <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e userError)</span> <span class="title">Error</span><span class="params">()</span> <span class="title">string</span></span>  &#123;</span><br><span class="line">	<span class="keyword">return</span> e.Message()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e userError)</span> <span class="title">Message</span><span class="params">()</span> <span class="title">string</span></span>  &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">string</span>(e)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">HandleFileList</span><span class="params">(writer http.ResponseWriter, request *http.Request)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> strings.Index(request.URL.Path, prefix) != <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> userError(<span class="string">"path must start with "</span> + prefix)</span><br><span class="line">	&#125;</span><br><span class="line">	path := request.URL.Path[<span class="built_in">len</span>(prefix):]</span><br><span class="line">	file, err := os.Open(path)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> file.Close()</span><br><span class="line"></span><br><span class="line">	all, err := ioutil.ReadAll(file)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	writer.Write(all)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 服务器入口以及错误处理</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"errorhandling/filelistingserver/filelisting"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">	<span class="string">"net/http"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> appHandler <span class="function"><span class="keyword">func</span><span class="params">(writer http.ResponseWriter, request *http.Request)</span> <span class="title">error</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">type</span> <span class="title">userError</span> <span class="title">interface</span></span> &#123;</span><br><span class="line">	error</span><br><span class="line">	Message() <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">errorWrapper</span><span class="params">(handler appHandler)</span> <span class="title">func</span><span class="params">(w http.ResponseWriter,</span></span></span><br><span class="line"><span class="function"><span class="params">	r *http.Request)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">		<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">			r := <span class="built_in">recover</span>()</span><br><span class="line">			<span class="keyword">if</span> r != <span class="literal">nil</span> &#123;</span><br><span class="line">				http.Error(</span><br><span class="line">					w,</span><br><span class="line">					http.StatusText(http.StatusInternalServerError),</span><br><span class="line">					http.StatusInternalServerError)</span><br><span class="line">				log.Printf(<span class="string">"Panic: %v"</span>, r)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">		err := handler(w, r)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			log.Printf(<span class="string">"Error handling request: %s"</span>, err.Error())</span><br><span class="line">			<span class="keyword">if</span> userError, ok := err.(userError); ok &#123;</span><br><span class="line">				http.Error(w, userError.Message(), http.StatusBadRequest)</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			code := http.StatusOK</span><br><span class="line">			<span class="keyword">switch</span> &#123;</span><br><span class="line">			<span class="keyword">case</span> os.IsNotExist(err):</span><br><span class="line">				code = http.StatusNotFound</span><br><span class="line">			<span class="keyword">case</span> os.IsPermission(err):</span><br><span class="line">				code = http.StatusForbidden</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				code = http.StatusInternalServerError</span><br><span class="line">			&#125;</span><br><span class="line">			http.Error(w, http.StatusText(code), code)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	http.HandleFunc(<span class="string">"/"</span>, errorWrapper(filelisting.HandleFileList))</span><br><span class="line">	err := http.ListenAndServe(<span class="string">":8888"</span>, <span class="literal">nil</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span>&#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里我们自定义了错误类型,并且应用了defer和recover</p>
+<p>对于可以预料的错误,我们使用error,比如文件打不开</p>
+<p>对于无法预料的错误,我们使用panic,比如数组下标越界</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/03/go语言中的错误处理和资源管理/" data-id="cjqjjs6z80008skvafezz86uh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/01/01/go语言中的函数式编程/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">go语言中的函数式编程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring框架/">Spring框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Spring框架/" style="font-size: 15px;">Spring框架</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/01/03/go语言中的错误处理和资源管理/">go语言中的错误处理和资源管理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/01/go语言中的函数式编程/">go语言中的函数式编程</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/26/go语言中的接口/">go语言中的接口</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/18/go语言中的面相对象/">go语言中的面相对象</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/07/go语言中的容器/">go语言中的容器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 LionFly<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

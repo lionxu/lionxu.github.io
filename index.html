@@ -62,6 +62,64 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-go语言中的错误处理和资源管理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/03/go语言中的错误处理和资源管理/" class="article-date">
+  <time datetime="2019-01-03T13:21:52.000Z" itemprop="datePublished">2019-01-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/03/go语言中的错误处理和资源管理/">go语言中的错误处理和资源管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>一、go语言中的defer调用</strong></p>
+<p>defer调用的特性简介:</p>
+<ul>
+<li>实现资源管理,确保在函数调用结束时调用defer语句</li>
+<li>参数在执行defer语句时计算</li>
+<li>defer语句列表为后进先出类似于栈结构</li>
+</ul>
+<p>defer的使用场景:</p>
+<ul>
+<li>Open/Close</li>
+<li>Lock/UnLock</li>
+<li>PrintHeader/PrintFooter</li>
+</ul>
+<p>示例代码:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"bufio"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">writeFile</span><span class="params">(filename <span class="keyword">string</span>)</span></span>  &#123;</span><br><span class="line">	file, err := os.Create(filename)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> file.Close()</span><br><span class="line"></span><br><span class="line">	writer := bufio.NewWriter(file)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> writer.Flush()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">20</span>; i++ &#123;</span><br><span class="line">		fmt.Fprintln(writer, i)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此处两个defer语句，在函数结束时,Flush先执行,实现内存与磁盘的数据同步,Close语句后执行,用于关闭文件.</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/03/go语言中的错误处理和资源管理/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/03/go语言中的错误处理和资源管理/" data-id="cjqjjs6z80008skvafezz86uh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-go语言中的函数式编程" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/01/01/go语言中的函数式编程/" class="article-date">
@@ -102,7 +160,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/01/go语言中的函数式编程/" data-id="cjqf8tqsm0003a8vanu8dijel" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/01/go语言中的函数式编程/" data-id="cjqjjs6z00003skvaeje6gz5d" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -160,7 +218,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/26/go语言中的接口/" data-id="cjqf8tqsp0004a8vagr0w3h2f" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/26/go语言中的接口/" data-id="cjqjjs6z30004skva03ovkhnj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -209,7 +267,7 @@
       
     </li></ul></div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/18/go语言中的面相对象/" data-id="cjqf8tqsq0005a8vahnxnfmim" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/18/go语言中的面相对象/" data-id="cjqjjs6z50005skva27lk2mdo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -256,7 +314,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/07/go语言中的容器/" data-id="cjqf8tqtf000ja8vabj7b9e8x" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/07/go语言中的容器/" data-id="cjqjjs707000jskvatj0fqckb" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -307,7 +365,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/04/Spring-AOP的实现机制/" data-id="cjqf8tqs80000a8vai1mo27vk" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/04/Spring-AOP的实现机制/" data-id="cjqjjs6yk0000skvalr8rt46q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring框架/">Spring框架</a></li></ul>
@@ -355,7 +413,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/02/go语言的基本语法/" data-id="cjqf8tqst0008a8vafwo4jyr2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/02/go语言的基本语法/" data-id="cjqjjs70i000lskvamencv6ic" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -400,7 +458,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/25/github中fork项目的更新/" data-id="cjqf8tqsg0001a8va7a7cpmwo" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/25/github中fork项目的更新/" data-id="cjqjjs6yr0001skvawu2m13gi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github/">github</a></li></ul>
@@ -446,7 +504,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/18/Spring的Ioc容器之依赖注入管理/" data-id="cjqf8tqte000ia8vaj57p16os" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/18/Spring的Ioc容器之依赖注入管理/" data-id="cjqjjs705000iskva5n4ivk0v" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring框架/">Spring框架</a></li></ul>
@@ -503,6 +561,10 @@
       <ul>
         
           <li>
+            <a href="/2019/01/03/go语言中的错误处理和资源管理/">go语言中的错误处理和资源管理</a>
+          </li>
+        
+          <li>
             <a href="/2019/01/01/go语言中的函数式编程/">go语言中的函数式编程</a>
           </li>
         
@@ -516,10 +578,6 @@
         
           <li>
             <a href="/2018/12/07/go语言中的容器/">go语言中的容器</a>
-          </li>
-        
-          <li>
-            <a href="/2018/12/04/Spring-AOP的实现机制/">Spring AOP的实现机制</a>
           </li>
         
       </ul>
