@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>k8s集群安装与配置 | LionFly Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文主要记录在CentOS Linux release 7.6.1810 (Core) 系统中配置Kubernetes集群的过程 1、节点规划    主机名 IP地址 角色     k8s-master 192.168.1.111 k8s主节点   k8s-node1 192.168.1.112 k8s从节点   k8s-node2 192.168.1.113 k8s从节点    2、软件版本 操">
+<meta name="keywords" content="Kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s集群安装与配置">
+<meta property="og:url" content="http://yoursite.com/2019/01/12/k8s集群安装与配置/index.html">
+<meta property="og:site_name" content="LionFly Blog">
+<meta property="og:description" content="本文主要记录在CentOS Linux release 7.6.1810 (Core) 系统中配置Kubernetes集群的过程 1、节点规划    主机名 IP地址 角色     k8s-master 192.168.1.111 k8s主节点   k8s-node1 192.168.1.112 k8s从节点   k8s-node2 192.168.1.113 k8s从节点    2、软件版本 操">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-02-23T09:43:06.424Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s集群安装与配置">
+<meta name="twitter:description" content="本文主要记录在CentOS Linux release 7.6.1810 (Core) 系统中配置Kubernetes集群的过程 1、节点规划    主机名 IP地址 角色     k8s-master 192.168.1.111 k8s主节点   k8s-node1 192.168.1.112 k8s从节点   k8s-node2 192.168.1.113 k8s从节点    2、软件版本 操">
+  
+    <link rel="alternate" href="/atom.xml" title="LionFly Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">LionFly Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-k8s集群安装与配置" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/12/k8s集群安装与配置/" class="article-date">
+  <time datetime="2019-01-12T06:53:52.000Z" itemprop="datePublished">2019-01-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      k8s集群安装与配置
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文主要记录在CentOS Linux release 7.6.1810 (Core) 系统中配置Kubernetes集群的过程</p>
+<p><strong>1、节点规划</strong></p>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP地址</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>k8s-master</td>
+<td>192.168.1.111</td>
+<td>k8s主节点</td>
+</tr>
+<tr>
+<td>k8s-node1</td>
+<td>192.168.1.112</td>
+<td>k8s从节点</td>
+</tr>
+<tr>
+<td>k8s-node2</td>
+<td>192.168.1.113</td>
+<td>k8s从节点</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2、软件版本</strong></p>
+<p>操作系统: CentOS Linux release 7.6.1810 (Core) </p>
+<p>Docker版本:18.09.0</p>
+<p>Kubernetes版本:1.13.2</p>
+<p><strong>3、环境准备</strong></p>
+<p>以下命令以root账号执行</p>
+<ul>
+<li>关闭所有节点的防火墙</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service firewalld stop</span><br><span class="line">systemctl disable firewalld</span><br></pre></td></tr></table></figure>
+<ul>
+<li>关闭所有节点的selinux</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setenforce 0</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改/etc/selinux/config中的SELINUX,为如下内容</span></span><br><span class="line">SELINUX=disabled</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改所有节点的/etc/hosts文件,增加如下配置</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">192.168.1.111 k8s-master</span><br><span class="line">192.168.1.112 k8s-node1</span><br><span class="line">192.168.1.113 k8s-node2</span><br></pre></td></tr></table></figure>
+<ul>
+<li>关闭所有节点的swap分区</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改/etc/fstab,注释掉如下内容</span></span><br><span class="line"><span class="meta">#</span><span class="bash">/dev/mapper/centos-swap swap                    swap    defaults        0 0</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p><strong>4、安装etcd</strong></p>
+<p>以下命令以root账号执行</p>
+<p>Etcd是Kubernetes集群中的一个十分重要的组件,用于保存集群所有的网络配置和对象的状态信息.</p>
+<p>整个kubernetes系统中一共有两个服务需要用到etcd用来协同和存储配置,分别是:</p>
+<p>1、网络插件flannel,对于其他网路插件也需要用到etcd存储网络信息</p>
+<p>2、kubernetes本身,包括各种对象的状态和元信息配置</p>
+<p>flannel操作etcd使用的是v2的API,而kubernetes操作etcd使用的是v3的API,所以在下面我们执行etcdctl的时候需要设置ETCDCTL_API环境变量,该变量默认值为2.</p>
+<p>在Etcd的V2和V3之间的数据结构完全不同,互不兼容,也就是说使用v2版本的API创建的数据只能使用V2的API访问,</p>
+<p>v3版本的API创建的数据只能使用V3的API访问。</p>
+<p>这就造成我们访问etcd中保存的flannel的数据需要使用etcdctl的V2版本的客户端,而访问kubernetes的数据需要设置ETCDCTL_API=3环境变量来指定V3版本的API。</p>
+<ul>
+<li>所有节点安装etcd</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install etcd</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改etcd的配置文件,/etc/etcd/etcd.conf</li>
+</ul>
+<p>k8s-master节点，修改如下配置项的值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ETCD_DATA_DIR="/var/lib/etcd/default.etcd"</span><br><span class="line">ETCD_LISTEN_PEER_URLS="http://0.0.0.0:2380"</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379,http://0.0.0.0:4001"</span><br><span class="line">ETCD_NAME="k8s-master"</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS="http://k8s-master:2380"</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS="http://k8s-master:2379,http://k8s-master:4001"</span><br><span class="line">ETCD_INITIAL_CLUSTER="k8s-master=http://k8s-master:2380,k8s-node1=http://k8s-node1:2380,k8s-node=http://k8s-node2:2380"</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE="new"</span><br></pre></td></tr></table></figure>
+<p>k8s-node1节点,修改如下配置项的值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ETCD_DATA_DIR="/var/lib/etcd/default.etcd"</span><br><span class="line">ETCD_LISTEN_PEER_URLS="http://0.0.0.0:2380"</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379"</span><br><span class="line">ETCD_NAME="k8s-node1"</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS="http://k8s-node1:2380"</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS="http://k8s-node1:2379,http://k8s-node1:4001"</span><br><span class="line">ETCD_INITIAL_CLUSTER="k8s-master=http://k8s-master:2380,k8s-node1=http://k8s-node1:2380,k8s-node2=http://k8s-node2:2380"</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE="new"</span><br></pre></td></tr></table></figure>
+<p>k8s-node2节点,修改如下配置项的值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ETCD_DATA_DIR="/var/lib/etcd/default.etcd"</span><br><span class="line">ETCD_LISTEN_PEER_URLS="http://0.0.0.0:2380"</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379,http://0.0.0.0:4001"</span><br><span class="line">ETCD_NAME="k8s-node2"</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS="http://k8s-node2:2380"</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS="http://k8s-node2:2379,http://k8s-node2:4001"</span><br><span class="line">ETCD_INITIAL_CLUSTER="k8s-master=http://k8s-master:2380,k8s-node1=http://k8s-node1:2380,k8s-node2=http://k8s-node2:2380"</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE="new"</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在所有节点启动etcd服务</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start etcd</span><br></pre></td></tr></table></figure>
+<ul>
+<li>etcd服务启动后状态验证</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> k8s-master执行如下命令,设置key和value,该命令输出0</span></span><br><span class="line">etcdctl set testdir/testkey0 0</span><br><span class="line"><span class="meta">#</span><span class="bash"> 该命令输出0</span></span><br><span class="line">etcdctl get testdir/testkey0 </span><br><span class="line"><span class="meta">#</span><span class="bash"> 在k8s-node1上执行如下命令,该命令输出0</span></span><br><span class="line">etcdctl get testdir/testkey0</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在k8s-node2上执行如下命令,该命令输出0</span></span><br><span class="line">etcdctl get testdir/testkey0</span><br></pre></td></tr></table></figure>
+<p><strong>5、安装docker-ce</strong></p>
+<p>以下命令以root账号执行</p>
+<p>在所有节点执行安装docker-ce的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line">yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line">yum makecache fast</span><br><span class="line">yum -y install docker-ce</span><br><span class="line">service docker start</span><br><span class="line"><span class="meta">#</span><span class="bash"> 对docker-ce的安装进行验证,该命令输出如下</span></span><br><span class="line">docker version</span><br><span class="line">Client:</span><br><span class="line"> Version:           18.09.2</span><br><span class="line"> API version:       1.39</span><br><span class="line"> Go version:        go1.10.6</span><br><span class="line"> Git commit:        6247962</span><br><span class="line"> Built:             Sun Feb 10 04:13:27 2019</span><br><span class="line"> OS/Arch:           linux/amd64</span><br><span class="line"> Experimental:      false</span><br><span class="line">Server: Docker Engine - Community</span><br><span class="line"> Engine:</span><br><span class="line">  Version:          18.09.2</span><br><span class="line">  API version:      1.39 (minimum version 1.12)</span><br><span class="line">  Go version:       go1.10.6</span><br><span class="line">  Git commit:       6247962</span><br><span class="line">  Built:            Sun Feb 10 03:47:25 2019</span><br><span class="line">  OS/Arch:          linux/amd64</span><br><span class="line">  Experimental:     false</span><br></pre></td></tr></table></figure>
+<p><strong>6、安装kubelet、kubeadm、kubectl</strong></p>
+<p>以下命令以root账号执行</p>
+<p>在所有节点上执行安装kubelet、kubeadm、kubectl的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 导入阿里云的kubernetes的镜像地址</span></span><br><span class="line">cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo</span><br><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">#</span><span class="bash"> 执行安装命令</span></span><br><span class="line">yum install -y kubelet kubeadm kubectl</span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动服务</span></span><br><span class="line">systemctl enable kubelet &amp;&amp; systemctl start kubelet</span><br></pre></td></tr></table></figure>
+<p><strong>7、镜像导入</strong></p>
+<p>以下命令使用root账号执行,而且镜像版本为v1.13.3</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 导入kube-proxy-amd64</span></span><br><span class="line">docker pull mirrorgooglecontainers/kube-proxy-amd64:v1.13.3</span><br><span class="line">docker tag mirrorgooglecontainers/kube-proxy-amd64:v1.13.3 k8s.gcr.io/kube-proxy:v1.13.3</span><br><span class="line">docker rmi mirrorgooglecontainers/kube-proxy-amd64:v1.13.3</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入kube-scheduler-amd64</span></span><br><span class="line">docker pull mirrorgooglecontainers/kube-scheduler-amd64:v1.13.3</span><br><span class="line">docker tag mirrorgooglecontainers/kube-scheduler-amd64:v1.13.3 k8s.gcr.io/kube-scheduler:v1.13.3</span><br><span class="line">docker rmi mirrorgooglecontainers/kube-scheduler-amd64:v1.13.3</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入 kube-controller-manager-amd64</span></span><br><span class="line">docker pull mirrorgooglecontainers/kube-controller-manager-amd64:v1.13.3</span><br><span class="line">docker tag mirrorgooglecontainers/kube-controller-manager-amd64:v1.13.3 k8s.gcr.io/kube-controller-manager:v1.13.3</span><br><span class="line">docker rmi mirrorgooglecontainers/kube-controller-manager-amd64:v1.13.3</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入 kube-apiserver-amd64</span></span><br><span class="line">docker pull mirrorgooglecontainers/kube-apiserver-amd64:v1.13.3</span><br><span class="line">docker tag mirrorgooglecontainers/kube-apiserver-amd64:v1.13.3 k8s.gcr.io/kube-apiserver:v1.13.3</span><br><span class="line">docker rmi mirrorgooglecontainers/kube-apiserver-amd64:v1.13.3</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入 etcd-amd64</span></span><br><span class="line">docker pull mirrorgooglecontainers/etcd-amd64:3.2.18</span><br><span class="line">docker tag mirrorgooglecontainers/etcd-amd64:3.2.18 k8s.gcr.io/etcd:3.2.24</span><br><span class="line">docker rmi mirrorgooglecontainers/etcd-amd64:3.2.18</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入 coredns</span></span><br><span class="line">docker pull coredns/coredns:1.3.1</span><br><span class="line">docker tag coredns/coredns:1.3.1 k8s.gcr.io/coredns:1.2.6</span><br><span class="line">docker rmi coredns/coredns:1.3.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入 pause-amd64</span></span><br><span class="line">docker pull rancher/pause-amd64:3.1</span><br><span class="line">docker tag rancher/pause-amd64:3.1 k8s.gcr.io/pause:3.1</span><br><span class="line">docker rmi rancher/pause-amd64:3.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入 kubernetes-dashboard-amd64</span></span><br><span class="line">docker pull kubernetesdashboarddev/kubernetes-dashboard-amd64:head</span><br><span class="line">docker tag kubernetesdashboarddev/kubernetes-dashboard-amd64:head k8s.gcr.io/kubernetes-dashboard-amd64:head</span><br><span class="line">docker rmi kubernetesdashboarddev/kubernetes-dashboard-amd64:head</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入 k8s-dns-sidecar-amd64</span></span><br><span class="line">docker pull sapcc/k8s-dns-sidecar-amd64:1.15.1</span><br><span class="line">docker tag sapcc/k8s-dns-sidecar-amd64:1.15.1 k8s.gcr.io/k8s-dns-sidecar-amd64:1.15.1</span><br><span class="line">docker rmi sapcc/k8s-dns-sidecar-amd64:1.15.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入 k8s-dns-kube-dns-amd64</span></span><br><span class="line">docker pull sapcc/k8s-dns-kube-dns-amd64:1.15.1</span><br><span class="line">docker tag sapcc/k8s-dns-kube-dns-amd64:1.15.1 k8s.gcr.io/k8s-dns-kube-dns-amd64:1.15.1</span><br><span class="line">docker rmi sapcc/k8s-dns-kube-dns-amd64:1.15.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 导入 k8s-dns-dnsmasq-nanny-amd64</span></span><br><span class="line">docker pull sapcc/k8s-dns-dnsmasq-nanny-amd64:1.15.1</span><br><span class="line">docker tag sapcc/k8s-dns-dnsmasq-nanny-amd64:1.15.1 k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.15.1</span><br><span class="line">docker rmi sapcc/k8s-dns-dnsmasq-nanny-amd64:1.15.1</span><br></pre></td></tr></table></figure>
+<p><strong>8、配置转发参数 </strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; /etc/sysctl.d/k8s.conf</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">vm.swappiness=0</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">#</span><span class="bash"> 执行系统加载</span></span><br><span class="line">sysctl --system</span><br></pre></td></tr></table></figure>
+<p><strong>9、master节点初始化</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --kubernetes-version=v1.13.3 --pod-network-cidr=10.244.0.0/16</span><br></pre></td></tr></table></figure>
+<p>执行后,会得到如下的输出,表明执行成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">[init] Using Kubernetes version: v1.13.3</span><br><span class="line">[preflight] Running pre-flight checks</span><br><span class="line">	[WARNING SystemVerification]: this Docker version is not on the list of validated versions: 18.09.2. Latest validated version: 18.06</span><br><span class="line">[preflight] Pulling images required for setting up a Kubernetes cluster</span><br><span class="line">[preflight] This might take a minute or two, depending on the speed of your internet connection</span><br><span class="line">[preflight] You can also perform this action in beforehand using 'kubeadm config images pull'</span><br><span class="line">[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"</span><br><span class="line">[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"</span><br><span class="line">[kubelet-start] Activating the kubelet service</span><br><span class="line">[certs] Using certificateDir folder "/etc/kubernetes/pki"</span><br><span class="line">[certs] Generating "ca" certificate and key</span><br><span class="line">[certs] Generating "apiserver" certificate and key</span><br><span class="line">[certs] apiserver serving cert is signed for DNS names [centos-master.com kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.1.111]</span><br><span class="line">[certs] Generating "apiserver-kubelet-client" certificate and key</span><br><span class="line">[certs] Generating "front-proxy-ca" certificate and key</span><br><span class="line">[certs] Generating "front-proxy-client" certificate and key</span><br><span class="line">[certs] Generating "etcd/ca" certificate and key</span><br><span class="line">[certs] Generating "etcd/server" certificate and key</span><br><span class="line">[certs] etcd/server serving cert is signed for DNS names [centos-master.com localhost] and IPs [192.168.1.111 127.0.0.1 ::1]</span><br><span class="line">[certs] Generating "etcd/peer" certificate and key</span><br><span class="line">[certs] etcd/peer serving cert is signed for DNS names [centos-master.com localhost] and IPs [192.168.1.111 127.0.0.1 ::1]</span><br><span class="line">[certs] Generating "etcd/healthcheck-client" certificate and key</span><br><span class="line">[certs] Generating "apiserver-etcd-client" certificate and key</span><br><span class="line">[certs] Generating "sa" key and public key</span><br><span class="line">[kubeconfig] Using kubeconfig folder "/etc/kubernetes"</span><br><span class="line">[kubeconfig] Writing "admin.conf" kubeconfig file</span><br><span class="line">[kubeconfig] Writing "kubelet.conf" kubeconfig file</span><br><span class="line">[kubeconfig] Writing "controller-manager.conf" kubeconfig file</span><br><span class="line">[kubeconfig] Writing "scheduler.conf" kubeconfig file</span><br><span class="line">[control-plane] Using manifest folder "/etc/kubernetes/manifests"</span><br><span class="line">[control-plane] Creating static Pod manifest for "kube-apiserver"</span><br><span class="line">[control-plane] Creating static Pod manifest for "kube-controller-manager"</span><br><span class="line">[control-plane] Creating static Pod manifest for "kube-scheduler"</span><br><span class="line">[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"</span><br><span class="line">[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s</span><br><span class="line">[apiclient] All control plane components are healthy after 39.504610 seconds</span><br><span class="line">[uploadconfig] storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace</span><br><span class="line">[kubelet] Creating a ConfigMap "kubelet-config-1.13" in namespace kube-system with the configuration for the kubelets in the cluster</span><br><span class="line">[patchnode] Uploading the CRI Socket information "/var/run/dockershim.sock" to the Node API object "centos-master.com" as an annotation</span><br><span class="line">[kubelet-check] Initial timeout of 40s passed.</span><br><span class="line">[mark-control-plane] Marking the node centos-master.com as control-plane by adding the label "node-role.kubernetes.io/master=''"</span><br><span class="line">[mark-control-plane] Marking the node centos-master.com as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]</span><br><span class="line">[bootstrap-token] Using token: 9akj5k.w4zq5jc9p2yffn0c</span><br><span class="line">[bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles</span><br><span class="line">[bootstraptoken] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials</span><br><span class="line">[bootstraptoken] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token</span><br><span class="line">[bootstraptoken] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster</span><br><span class="line">[bootstraptoken] creating the "cluster-info" ConfigMap in the "kube-public" namespace</span><br><span class="line">[addons] Applied essential addon: CoreDNS</span><br><span class="line">[addons] Applied essential addon: kube-proxy</span><br><span class="line"></span><br><span class="line">Your Kubernetes master has initialized successfully!</span><br><span class="line"></span><br><span class="line">To start using your cluster, you need to run the following as a regular user:</span><br><span class="line"></span><br><span class="line">  mkdir -p $HOME/.kube</span><br><span class="line">  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">  sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br><span class="line"></span><br><span class="line">You should now deploy a pod network to the cluster.</span><br><span class="line">Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:</span><br><span class="line">  https://kubernetes.io/docs/concepts/cluster-administration/addons/</span><br><span class="line"></span><br><span class="line">You can now join any number of machines by running the following on each node</span><br><span class="line">as root:</span><br><span class="line"></span><br><span class="line">  kubeadm join 192.168.1.111:6443 --token 9akj5k.w4zq5jc9p2yffn0c --discovery-token-ca-cert-hash sha256:e7f281c0d367f17843c38b618a3a314c7187dce33e48b532b496b1996cd2edd3</span><br></pre></td></tr></table></figure>
+<p><strong>10、master配置kubectl认证信息</strong></p>
+<p>以root账号依次执行以下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在/etc/profile.d/下创建文件kubernetes.sh,输入如下内容</span></span><br><span class="line">KUBECONFIG=/etc/kubernetes/admin.conf</span><br><span class="line">export KUBECONFIG</span><br><span class="line"><span class="meta">#</span><span class="bash"> 然后执行如下命令</span></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+<p><strong>11、master配置Flannel网络</strong></p>
+<p>以root账号依次执行以下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/cni/net.d/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 向文件写入内容</span></span><br><span class="line">cat &lt;&lt;EOF&gt; /etc/cni/net.d/10-flannel.conf</span><br><span class="line">&#123;</span><br><span class="line">"name": "cbr0",</span><br><span class="line">"type": "flannel",</span><br><span class="line">"delegate": &#123;</span><br><span class="line">"isDefaultGateway": true</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">mkdir /usr/share/oci-umount/oci-umount.d -p</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">mkdir /run/flannel/</span><br><span class="line">cat &lt;&lt;EOF&gt; /run/flannel/subnet.env</span><br><span class="line">FLANNEL_NETWORK=10.244.0.0/16</span><br><span class="line">FLANNEL_SUBNET=10.244.1.0/24</span><br><span class="line">FLANNEL_MTU=1450</span><br><span class="line">FLANNEL_IPMASQ=true</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>最后，我们需要新建一个 flannel.yml 文件，内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">kind: ClusterRole</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: flannel</span><br><span class="line">rules:</span><br><span class="line">  - apiGroups:</span><br><span class="line">      - ""</span><br><span class="line">    resources:</span><br><span class="line">      - pods</span><br><span class="line">    verbs:</span><br><span class="line">      - get</span><br><span class="line">  - apiGroups:</span><br><span class="line">      - ""</span><br><span class="line">    resources:</span><br><span class="line">      - nodes</span><br><span class="line">    verbs:</span><br><span class="line">      - list</span><br><span class="line">      - watch</span><br><span class="line">  - apiGroups:</span><br><span class="line">      - ""</span><br><span class="line">    resources:</span><br><span class="line">      - nodes/status</span><br><span class="line">    verbs:</span><br><span class="line">      - patch</span><br><span class="line">---</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: flannel</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: flannel</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: flannel</span><br><span class="line">  namespace: kube-system</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: flannel</span><br><span class="line">  namespace: kube-system</span><br><span class="line">---</span><br><span class="line">kind: ConfigMap</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: kube-flannel-cfg</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  labels:</span><br><span class="line">    tier: node</span><br><span class="line">    app: flannel</span><br><span class="line">data:</span><br><span class="line">  cni-conf.json: |</span><br><span class="line">    &#123;</span><br><span class="line">      "name": "cbr0",</span><br><span class="line">      "type": "flannel",</span><br><span class="line">      "delegate": &#123;</span><br><span class="line">        "isDefaultGateway": true</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  net-conf.json: |</span><br><span class="line">    &#123;</span><br><span class="line">      "Network": "10.244.0.0/16",</span><br><span class="line">      "Backend": &#123;</span><br><span class="line">        "Type": "vxlan"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">---</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: DaemonSet</span><br><span class="line">metadata:</span><br><span class="line">  name: kube-flannel-ds</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  labels:</span><br><span class="line">    tier: node</span><br><span class="line">    app: flannel</span><br><span class="line">spec:</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        tier: node</span><br><span class="line">        app: flannel</span><br><span class="line">    spec:</span><br><span class="line">      hostNetwork: true</span><br><span class="line">      nodeSelector:</span><br><span class="line">        beta.kubernetes.io/arch: amd64</span><br><span class="line">      tolerations:</span><br><span class="line">      - key: node-role.kubernetes.io/master</span><br><span class="line">        operator: Exists</span><br><span class="line">        effect: NoSchedule</span><br><span class="line">      serviceAccountName: flannel</span><br><span class="line">      initContainers:</span><br><span class="line">      - name: install-cni</span><br><span class="line">        image: quay.io/coreos/flannel:v0.9.1-amd64</span><br><span class="line">        command:</span><br><span class="line">        - cp</span><br><span class="line">        args:</span><br><span class="line">        - -f</span><br><span class="line">        - /etc/kube-flannel/cni-conf.json</span><br><span class="line">        - /etc/cni/net.d/10-flannel.conf</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: cni</span><br><span class="line">          mountPath: /etc/cni/net.d</span><br><span class="line">        - name: flannel-cfg</span><br><span class="line">          mountPath: /etc/kube-flannel/</span><br><span class="line">      containers:</span><br><span class="line">      - name: kube-flannel</span><br><span class="line">        image: quay.io/coreos/flannel:v0.9.1-amd64</span><br><span class="line">        command: [ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr" ]</span><br><span class="line">        securityContext:</span><br><span class="line">          privileged: true</span><br><span class="line">        env:</span><br><span class="line">        - name: POD_NAME</span><br><span class="line">          valueFrom:</span><br><span class="line">            fieldRef:</span><br><span class="line">              fieldPath: metadata.name</span><br><span class="line">        - name: POD_NAMESPACE</span><br><span class="line">          valueFrom:</span><br><span class="line">            fieldRef:</span><br><span class="line">              fieldPath: metadata.namespace</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: run</span><br><span class="line">          mountPath: /run</span><br><span class="line">        - name: flannel-cfg</span><br><span class="line">          mountPath: /etc/kube-flannel/</span><br><span class="line">      volumes:</span><br><span class="line">        - name: run</span><br><span class="line">          hostPath:</span><br><span class="line">            path: /run</span><br><span class="line">        - name: cni</span><br><span class="line">          hostPath:</span><br><span class="line">            path: /etc/cni/net.d</span><br><span class="line">        - name: flannel-cfg</span><br><span class="line">          configMap:</span><br><span class="line">            name: kube-flannel-cfg</span><br></pre></td></tr></table></figure>
+<p>执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f ./flannel.yml</span><br></pre></td></tr></table></figure>
+<p>执行完成之后，我们可以运行一下命令，查看现在的节点信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get nodes</span><br></pre></td></tr></table></figure>
+<p>会得到类似于下面的输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NAME                STATUS     ROLES    AGE   VERSION</span><br><span class="line">centos-master.com   NotReady   master   46h   v1.13.3</span><br></pre></td></tr></table></figure>
+<p>查看kubectl的日志得到如下内容,查看日志的命令是: journalctl -f -u kubelet</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Feb 20 22:30:27 centos-master.com kubelet[6437]: E0220 22:30:27.498890    6437 kubelet.go:2192] Container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:docker: network plugin is not ready: cni config uninitialized</span><br></pre></td></tr></table></figure>
+<p>此处,需要修改 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf文件的内容,增加以下配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/ --cni-bin-dir=/opt/cni/bin"</span><br></pre></td></tr></table></figure>
+<p>然后执行如下命令重启kubelet</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl start kubelet</span><br></pre></td></tr></table></figure>
+<p>再次查看节点信息,得到如下结果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NAME                STATUS   ROLES    AGE   VERSION</span><br><span class="line">centos-master.com   Ready    master   46h   v1.13.3</span><br></pre></td></tr></table></figure>
+<p><strong>12、Node节点的配置</strong></p>
+<p>在Node节点以root账号执行如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 192.168.1.111:6443 --token 9akj5k.w4zq5jc9p2yffn0c --discovery-token-ca-cert-hash sha256:e7f281c0d367f17843c38b618a3a314c7187dce33e48b532b496b1996cd2edd3</span><br></pre></td></tr></table></figure>
+<p>我们得到如下输出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[discovery] Failed to connect to API Server "192.168.1.111:6443": token id "9akj5k" is invalid for this cluster or it has expired. Use "kubeadm token create" on the master node to creating a new valid token</span><br></pre></td></tr></table></figure>
+<p>在kubernetes的官网上查到,初始化token在24小时候会被master删除,以防泄露.我们使用kubeadm token create重新生成token.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubeadm token create</span><br><span class="line"><span class="meta">#</span><span class="bash"> 输出如下</span></span><br><span class="line">sp6wfk.b471wyi5n9pu2v5a</span><br></pre></td></tr></table></figure>
+<p>重新执行加入集群的命令如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 192.168.1.111:6443 --token sp6wfk.b471wyi5n9pu2v5a --discovery-token-ca-cert-hash sha256:e7f281c0d367f17843c38b618a3a314c7187dce33e48b532b496b1996cd2edd3</span><br></pre></td></tr></table></figure>
+<p>得到如下输出,说明加入成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[preflight] Running pre-flight checks</span><br><span class="line">	[WARNING SystemVerification]: this Docker version is not on the list of validated versions: 18.09.2. Latest validated version: 18.06</span><br><span class="line">[discovery] Trying to connect to API Server "192.168.1.111:6443"</span><br><span class="line">[discovery] Created cluster-info discovery client, requesting info from "https://192.168.1.111:6443"</span><br><span class="line">[discovery] Requesting info from "https://192.168.1.111:6443" again to validate TLS against the pinned public key</span><br><span class="line">[discovery] Cluster info signature and contents are valid and TLS certificate validates against pinned roots, will use API Server "192.168.1.111:6443"</span><br><span class="line">[discovery] Successfully established connection with API Server "192.168.1.111:6443"</span><br><span class="line">[join] Reading configuration from the cluster...</span><br><span class="line">[join] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'</span><br><span class="line">[kubelet] Downloading configuration for the kubelet from the "kubelet-config-1.13" ConfigMap in the kube-system namespace</span><br><span class="line">[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"</span><br><span class="line">[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"</span><br><span class="line">[kubelet-start] Activating the kubelet service</span><br><span class="line">[tlsbootstrap] Waiting for the kubelet to perform the TLS Bootstrap...</span><br><span class="line">[patchnode] Uploading the CRI Socket information "/var/run/dockershim.sock" to the Node API object "centos-slave1.com" as an annotation</span><br><span class="line"></span><br><span class="line">This node has joined the cluster:</span><br><span class="line">* Certificate signing request was sent to apiserver and a response was received.</span><br><span class="line">* The Kubelet was informed of the new secure connection details.</span><br><span class="line"></span><br><span class="line">Run 'kubectl get nodes' on the master to see this node join the cluster.</span><br></pre></td></tr></table></figure>
+<p>在master节点查看节点信息如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NAME                STATUS     ROLES    AGE     VERSION</span><br><span class="line">centos-master.com   Ready      master   3d22h   v1.13.3</span><br><span class="line">centos-slave1.com   NotReady   &lt;none&gt;   2m51s   v1.13.3</span><br></pre></td></tr></table></figure>
+<p>使用journalctl -f -u kubelet查看日志输出如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Feb 22 22:36:46 centos-slave1.com kubelet[10861]: E0222 22:36:46.516772   10861 kubelet.go:2192] Container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:docker: network plugin is not ready: cni config uninitialized</span><br><span class="line">Feb 22 22:36:51 centos-slave1.com kubelet[10861]: W0222 22:36:51.518591   10861 cni.go:203] Unable to update cni config: No networks found in /etc/cni/net.d</span><br></pre></td></tr></table></figure>
+<p>使用与上面相同的处理办法,然后重启node节点,但是我们查看node节点的日志,发现问题依旧:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Feb 22 23:18:31 centos-slave1.com kubelet[12010]: E0222 23:18:31.222971   12010 kubelet.go:2192] Container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:docker: network plugin is not ready: cni config uninitialized</span><br><span class="line">Feb 22 23:18:36 centos-slave1.com kubelet[12010]: W0222 23:18:36.224853   12010 cni.go:203] Unable to update cni config: No networks found in /etc/cni/net.d</span><br></pre></td></tr></table></figure>
+<p>同时,我们查看master节点的日志,发现如下问题:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Feb 22 21:52:01 centos-master.com kubelet[6442]: E0222 21:52:01.377107    6442 remote_runtime.go:96] RunPodSandbox from runtime service failed: rpc error: code = Unknown desc = failed to set up sandbox container "ad0b0e03f70be0706218af708d28485a19437d7224e2b3a6f200081aca96401f" network for pod "coredns-86c58d9df4-xgws9": NetworkPlugin cni failed to set up pod "coredns-86c58d9df4-xgws9_kube-system" network: open /run/flannel/subnet.env: no such file or directory</span><br><span class="line">Feb 22 21:52:01 centos-master.com kubelet[6442]: E0222 21:52:01.377162    6442 kuberuntime_sandbox.go:68] CreatePodSandbox for pod "coredns-86c58d9df4-xgws9_kube-system(b2824883-3396-11e9-a7ee-000c298a1460)" failed: rpc error: code = Unknown desc = failed to set up sandbox container "ad0b0e03f70be0706218af708d28485a19437d7224e2b3a6f200081aca96401f" network for pod "coredns-86c58d9df4-xgws9": NetworkPlugin cni failed to set up pod "coredns-86c58d9df4-xgws9_kube-system" network: open /run/flannel/subnet.env: no such file or directory</span><br><span class="line">Feb 22 21:52:01 centos-master.com kubelet[6442]: E0222 21:52:01.377180    6442 kuberuntime_manager.go:662] createPodSandbox for pod "coredns-86c58d9df4-xgws9_kube-system(b2824883-3396-11e9-a7ee-000c298a1460)" failed: rpc error: code = Unknown desc = failed to set up sandbox container "ad0b0e03f70be0706218af708d28485a19437d7224e2b3a6f200081aca96401f" network for pod "coredns-86c58d9df4-xgws9": NetworkPlugin cni failed to set up pod "coredns-86c58d9df4-xgws9_kube-system" network: open /run/flannel/subnet.env: no such file or directory</span><br><span class="line">Feb 22 21:52:01 centos-master.com kubelet[6442]: E0222 21:52:01.377241    6442 pod_workers.go:190] Error syncing pod b2824883-3396-11e9-a7ee-000c298a1460 ("coredns-86c58d9df4-xgws9_kube-system(b2824883-3396-11e9-a7ee-000c298a1460)"), skipping: failed to "CreatePodSandbox" for "coredns-86c58d9df4-xgws9_kube-system(b2824883-3396-11e9-a7ee-000c298a1460)" with CreatePodSandboxError: "CreatePodSandbox for pod \"coredns-86c58d9df4-xgws9_kube-system(b2824883-3396-11e9-a7ee-000c298a1460)\" failed: rpc error: code = Unknown desc = failed to set up sandbox container \"ad0b0e03f70be0706218af708d28485a19437d7224e2b3a6f200081aca96401f\" network for pod \"coredns-86c58d9df4-xgws9\": NetworkPlugin cni failed to set up pod \"coredns-86c58d9df4-xgws9_kube-system\" network: open /run/flannel/subnet.env: no such file or directory"</span><br><span class="line">Feb 22 21:52:01 centos-master.com kubelet[6442]: W0222 21:52:01.576327    6442 cni.go:302] CNI failed to retrieve network namespace path: cannot find network namespace for the terminated container "5ec94140e50633d14c7c6ef9d0fceeb167b045c9d75cc49c858a609bb39c6ea6"</span><br><span class="line">Feb 22 21:52:01 centos-master.com kubelet[6442]: W0222 21:52:01.577693    6442 cni.go:302] CNI failed to retrieve network namespace path: cannot find network namespace for the terminated container "ad0b0e03f70be0706218af708d28485a19437d7224e2b3a6f200081aca96401f"</span><br><span class="line">Feb 22 21:52:02 centos-master.com kubelet[6442]: W0222 21:52:02.681389    6442 pod_container_deletor.go:75] Container "9c172ef1067476f418ca0fb68498380c202a1543bb413119d213a078005345dd" not found in pod's containers</span><br><span class="line">Feb 22 21:52:02 centos-master.com kubelet[6442]: W0222 21:52:02.721288    6442 pod_container_deletor.go:75] Container "e894752e660ec1a1100231011d9a255497d56c34a46eb43e1b2261780d374543" not found in pod's containers</span><br><span class="line">Feb 22 21:52:45 centos-master.com kubelet[6442]: E0222 21:52:45.738786    6442 kuberuntime_manager.go:857] PodSandboxStatus of sandbox "991e298210802925ce27a7c4fa733f0ac4dc1890edea4bf28476328474caadcb" for pod "coredns-86c58d9df4-xgws9_kube-system(b2824883-3396-11e9-a7ee-000c298a1460)" error: rpc error: code = Unknown desc = Error: No such container: 991e298210802925ce27a7c4fa733f0ac4dc1890edea4bf28476328474caadcb</span><br><span class="line">Feb 22 21:52:45 centos-master.com kubelet[6442]: E0222 21:52:45.738826    6442 generic.go:247] PLEG: Ignoring events for pod coredns-86c58d9df4-xgws9/kube-system: rpc error: code = Unknown desc = Error: No such container: 991e298210802925ce27a7c4fa733f0ac4dc1890edea4bf28476328474caadcb</span><br></pre></td></tr></table></figure>
+<p>应该是我们的flannel网络插件安装出现了问题,我通过如下方法解决了该问题:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/cni/net.d/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 向文件写入内容</span></span><br><span class="line">cat &lt;&lt;EOF&gt; /etc/cni/net.d/10-flannel.conf</span><br><span class="line">&#123;</span><br><span class="line">"name": "cbr0",</span><br><span class="line">"type": "flannel",</span><br><span class="line">"delegate": &#123;</span><br><span class="line">"isDefaultGateway": true</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">mkdir /usr/share/oci-umount/oci-umount.d -p</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">mkdir /run/flannel/</span><br><span class="line">cat &lt;&lt;EOF&gt; /run/flannel/subnet.env</span><br><span class="line">FLANNEL_NETWORK=10.244.0.0/16</span><br><span class="line">FLANNEL_SUBNET=10.244.1.0/24</span><br><span class="line">FLANNEL_MTU=1450</span><br><span class="line">FLANNEL_IPMASQ=true</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>然后重启node节点的kubernetes:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start kubelet</span><br></pre></td></tr></table></figure>
+<p>查看节点状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NAME                STATUS   ROLES    AGE     VERSION</span><br><span class="line">centos-master.com   Ready    master   3d23h   v1.13.3</span><br><span class="line">centos-slave1.com   Ready    &lt;none&gt;   72m     v1.13.3</span><br></pre></td></tr></table></figure>
+<p>node2的节点的配置也是如此,安装完成后查看节点状态如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">centos-master.com   Ready    master   4d11h   v1.13.3</span><br><span class="line">centos-slave1.com   Ready    &lt;none&gt;   13h     v1.13.3</span><br><span class="line">centos-slave2.com   Ready    &lt;none&gt;   87s     v1.13.3</span><br></pre></td></tr></table></figure>
+<p>查看在集群上启动的所有pod,执行如下命令:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods -n kube-system -o wide</span><br><span class="line"><span class="meta">#</span><span class="bash"> 输出如下</span></span><br><span class="line">NAME                                        READY   STATUS    RESTARTS   AGE     IP              NODE                NOMINATED NODE   READINESS GATES</span><br><span class="line">coredns-86c58d9df4-f466h                    1/1     Running   11         4d17h   10.244.0.17     centos-master.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">coredns-86c58d9df4-xgws9                    1/1     Running   13         4d17h   10.244.0.16     centos-master.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">etcd-centos-master.com                      1/1     Running   10         4d17h   192.168.1.111   centos-master.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-apiserver-centos-master.com            1/1     Running   11         4d17h   192.168.1.111   centos-master.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-controller-manager-centos-master.com   1/1     Running   9          4d17h   192.168.1.111   centos-master.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-flannel-ds-d9b5l                       1/1     Running   1          17h     192.168.1.112   centos-slave1.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-flannel-ds-g8p7j                       1/1     Running   1          5h30m   192.168.1.113   centos-slave2.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-flannel-ds-w47jn                       1/1     Running   8          2d18h   192.168.1.111   centos-master.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-proxy-44qcc                            1/1     Running   3          18h     192.168.1.112   centos-slave1.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-proxy-68l54                            1/1     Running   10         4d17h   192.168.1.111   centos-master.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-proxy-6gqpb                            1/1     Running   1          5h31m   192.168.1.113   centos-slave2.com   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">kube-scheduler-centos-master.com            1/1     Running   9          4d17h   192.168.1.111   centos-master.com   &lt;none&gt;           &lt;none&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/12/k8s集群安装与配置/" data-id="cjsharf42000thovaotk3zzb3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/01/15/go语言中的Goroutine/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          go语言中的Goroutine
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/01/07/go语言中的测试和性能调优/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">go语言中的测试和性能调优</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring框架/">Spring框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Spring框架/" style="font-size: 15px;">Spring框架</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/01/15/go语言中的Goroutine/">go语言中的Goroutine</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/12/k8s集群安装与配置/">k8s集群安装与配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/07/go语言中的测试和性能调优/">go语言中的测试和性能调优</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/03/go语言中的错误处理和资源管理/">go语言中的错误处理和资源管理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/01/go语言中的函数式编程/">go语言中的函数式编程</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 LionFly<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -5,20 +5,15 @@
   
 
   
-  <title>github中fork项目的更新 | LionFly Blog</title>
+  <title>LionFly Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="我们在浏览GitHub的时候，如果遇到自己喜欢的项目，经常会把该项目的源码fork到自己的repository中去。 但是，这里存在一个问题，就是我们如何把被fork的项目后续代码的更新同步到我们自己的repository中去呢。 由于，我主要是使用git bash来进行git的相关操作，所以下面就讲述一下，如何通过git命令来实现，fork项目的代码同步问题。">
-<meta name="keywords" content="github">
-<meta property="og:type" content="article">
-<meta property="og:title" content="github中fork项目的更新">
-<meta property="og:url" content="http://yoursite.com/2018/11/25/github中fork项目的更新/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="LionFly Blog">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="LionFly Blog">
-<meta property="og:description" content="我们在浏览GitHub的时候，如果遇到自己喜欢的项目，经常会把该项目的源码fork到自己的repository中去。 但是，这里存在一个问题，就是我们如何把被fork的项目后续代码的更新同步到我们自己的repository中去呢。 由于，我主要是使用git bash来进行git的相关操作，所以下面就讲述一下，如何通过git命令来实现，fork项目的代码同步问题。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-03T15:28:24.678Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="github中fork项目的更新">
-<meta name="twitter:description" content="我们在浏览GitHub的时候，如果遇到自己喜欢的项目，经常会把该项目的源码fork到自己的repository中去。 但是，这里存在一个问题，就是我们如何把被fork的项目后续代码的更新同步到我们自己的repository中去呢。 由于，我主要是使用git bash来进行git的相关操作，所以下面就讲述一下，如何通过git命令来实现，fork项目的代码同步问题。">
+<meta name="twitter:title" content="LionFly Blog">
   
     <link rel="alternate" href="/atom.xml" title="LionFly Blog" type="application/atom+xml">
   
@@ -65,7 +60,9 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-github中fork项目的更新" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main">
+  
+    <article id="post-github中fork项目的更新" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/11/25/github中fork项目的更新/" class="article-date">
   <time datetime="2018-11-25T06:53:12.000Z" itemprop="datePublished">2018-11-25</time>
@@ -78,8 +75,8 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      github中fork项目的更新
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/25/github中fork项目的更新/">github中fork项目的更新</a>
     </h1>
   
 
@@ -90,18 +87,11 @@
         <p>我们在浏览GitHub的时候，如果遇到自己喜欢的项目，经常会把该项目的源码fork到自己的repository中去。</p>
 <p>但是，这里存在一个问题，就是我们如何把被fork的项目后续代码的更新同步到我们自己的repository中去呢。</p>
 <p>由于，我主要是使用git bash来进行git的相关操作，所以下面就讲述一下，如何通过git命令来实现，fork项目的代码同步问题。</p>
-<a id="more"></a>
-<p>一、用git remote命令查看远程主机状态</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
-<p>二、把被fork项目的git地址添加到本地仓库中</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add upstream git@github.com:xxx/xxx.git</span><br></pre></td></tr></table></figure>
-<p>三、拉去被fork项目的最新代码</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch upstream</span><br></pre></td></tr></table></figure>
-<p>四、将被fork项目的最新代码与本地仓库中的旧版本的代码进行合并</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge upstream/master</span><br></pre></td></tr></table></figure>
-<p>五、将merge后的本地仓库的最新代码推送到远程的github仓库上去</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push</span><br></pre></td></tr></table></figure>
-
+        
+          <p class="article-more-link">
+            <a href="/2018/11/25/github中fork项目的更新/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
@@ -113,28 +103,62 @@
     </footer>
   </div>
   
-    
-<nav id="article-nav">
-  
-    <a href="/2018/12/02/go语言的基本语法/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          go语言的基本语法
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2018/11/18/Spring的Ioc容器之依赖注入管理/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Spring的Ioc容器之依赖注入管理</div>
-    </a>
-  
-</nav>
+</article>
+
 
   
+    <article id="post-Spring的Ioc容器之依赖注入管理" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/18/Spring的Ioc容器之依赖注入管理/" class="article-date">
+  <time datetime="2018-11-18T02:01:56.000Z" itemprop="datePublished">2018-11-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/18/Spring的Ioc容器之依赖注入管理/">Spring的Ioc容器之依赖注入管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1-首先，我们来看下Spring的Ioc容器如何管理单一的对象</p>
+<p>我们先使用最原始的方式，xml配置来实现</p>
+<p>Bean对象的定义</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(<span class="keyword">int</span> id, String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"User&#123;"</span> +</span><br><span class="line">                <span class="string">"id="</span> + id +</span><br><span class="line">                <span class="string">", name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2018/11/18/Spring的Ioc容器之依赖注入管理/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/18/Spring的Ioc容器之依赖注入管理/" data-id="cjsharf3f000phovag346990t" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring框架/">Spring框架</a></li></ul>
+
+    </footer>
+  </div>
+  
 </article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 </section>
         

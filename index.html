@@ -62,6 +62,206 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-go语言中的Goroutine" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/15/go语言中的Goroutine/" class="article-date">
+  <time datetime="2019-01-15T14:10:16.000Z" itemprop="datePublished">2019-01-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/15/go语言中的Goroutine/">go语言中的Goroutine</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>一、关于协程</strong></p>
+<ul>
+<li>轻量级线程</li>
+<li>非抢占式多任务处理,由协程主动交出控制权</li>
+<li>编译器/解释器/虚拟机层面的多任务</li>
+<li>多个协程可以在一个或多个线程上运行</li>
+</ul>
+<p><strong>二、Goroutine示例代码</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span> ; i++  &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">			<span class="keyword">for</span>  &#123;</span><br><span class="line">				fmt.Printf(<span class="string">"go routine, execute %d\n"</span>, i)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;(i)</span><br><span class="line">	&#125;</span><br><span class="line">	time.Sleep(time.Millisecond)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在一个函数调用前面增加一个关键字go,这样就构成了一个goroutine</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/15/go语言中的Goroutine/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/15/go语言中的Goroutine/" data-id="cjsharf2o0003hova4wfwcofh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-k8s集群安装与配置" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/12/k8s集群安装与配置/" class="article-date">
+  <time datetime="2019-01-12T06:53:52.000Z" itemprop="datePublished">2019-01-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/12/k8s集群安装与配置/">k8s集群安装与配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文主要记录在CentOS Linux release 7.6.1810 (Core) 系统中配置Kubernetes集群的过程</p>
+<p><strong>1、节点规划</strong></p>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP地址</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>k8s-master</td>
+<td>192.168.1.111</td>
+<td>k8s主节点</td>
+</tr>
+<tr>
+<td>k8s-node1</td>
+<td>192.168.1.112</td>
+<td>k8s从节点</td>
+</tr>
+<tr>
+<td>k8s-node2</td>
+<td>192.168.1.113</td>
+<td>k8s从节点</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2、软件版本</strong></p>
+<p>操作系统: CentOS Linux release 7.6.1810 (Core) </p>
+<p>Docker版本:18.09.0</p>
+<p>Kubernetes版本:1.13.2</p>
+<p><strong>3、环境准备</strong></p>
+<p>以下命令以root账号执行</p>
+<ul>
+<li>关闭所有节点的防火墙</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service firewalld stop</span><br><span class="line">systemctl disable firewalld</span><br></pre></td></tr></table></figure>
+<ul>
+<li>关闭所有节点的selinux</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setenforce 0</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改/etc/selinux/config中的SELINUX,为如下内容</span></span><br><span class="line">SELINUX=disabled</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改所有节点的/etc/hosts文件,增加如下配置</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">192.168.1.111 k8s-master</span><br><span class="line">192.168.1.112 k8s-node1</span><br><span class="line">192.168.1.113 k8s-node2</span><br></pre></td></tr></table></figure>
+<ul>
+<li>关闭所有节点的swap分区</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改/etc/fstab,注释掉如下内容</span></span><br><span class="line"><span class="meta">#</span><span class="bash">/dev/mapper/centos-swap swap                    swap    defaults        0 0</span></span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/12/k8s集群安装与配置/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/12/k8s集群安装与配置/" data-id="cjsharf42000thovaotk3zzb3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-go语言中的测试和性能调优" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/01/07/go语言中的测试和性能调优/" class="article-date">
+  <time datetime="2019-01-07T13:43:30.000Z" itemprop="datePublished">2019-01-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/07/go语言中的测试和性能调优/">go语言中的测试和性能调优</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>一、传统测试与表格驱动测试的比较</strong></p>
+<p>传统测试：</p>
+<ul>
+<li>测试数据与测试逻辑混合在一起</li>
+<li>出错信息不明确</li>
+<li>一旦一个数据出错测试全部结束</li>
+</ul>
+<p>表格驱动测试:</p>
+<ul>
+<li>分离的测试数据和测试逻辑</li>
+<li>明确的出错信息</li>
+<li>可以部分失败</li>
+<li>go语言的特性使我们更容易实现表格驱动测试</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2019/01/07/go语言中的测试和性能调优/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/01/07/go语言中的测试和性能调优/" data-id="cjsharf2v0008hovarzaxch07" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-go语言中的错误处理和资源管理" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/01/03/go语言中的错误处理和资源管理/" class="article-date">
@@ -108,7 +308,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/03/go语言中的错误处理和资源管理/" data-id="cjqjjs6z80008skvafezz86uh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/03/go语言中的错误处理和资源管理/" data-id="cjsharf2x0009hovab07pyftu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -160,7 +360,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/01/01/go语言中的函数式编程/" data-id="cjqjjs6z00003skvaeje6gz5d" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/01/01/go语言中的函数式编程/" data-id="cjsharf2q0004hovaawd6c6p4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -218,7 +418,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/26/go语言中的接口/" data-id="cjqjjs6z30004skva03ovkhnj" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/26/go语言中的接口/" data-id="cjsharf2s0005hovahhveqyz4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -267,7 +467,7 @@
       
     </li></ul></div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/18/go语言中的面相对象/" data-id="cjqjjs6z50005skva27lk2mdo" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/18/go语言中的面相对象/" data-id="cjsharf2z000bhovadpe5pk73" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -314,7 +514,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/07/go语言中的容器/" data-id="cjqjjs707000jskvatj0fqckb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/07/go语言中的容器/" data-id="cjsharf3h000qhovawzc5kxhq" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -365,7 +565,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/04/Spring-AOP的实现机制/" data-id="cjqjjs6yk0000skvalr8rt46q" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/04/Spring-AOP的实现机制/" data-id="cjsharf2a0000hovak6f7yfqk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring框架/">Spring框架</a></li></ul>
@@ -413,7 +613,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/02/go语言的基本语法/" data-id="cjqjjs70i000lskvamencv6ic" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/02/go语言的基本语法/" data-id="cjsharf31000dhovavsy84dwk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -425,98 +625,12 @@
 
 
   
-    <article id="post-github中fork项目的更新" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/25/github中fork项目的更新/" class="article-date">
-  <time datetime="2018-11-25T06:53:12.000Z" itemprop="datePublished">2018-11-25</time>
-</a>
+
+
+  <nav id="page-nav">
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/25/github中fork项目的更新/">github中fork项目的更新</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>我们在浏览GitHub的时候，如果遇到自己喜欢的项目，经常会把该项目的源码fork到自己的repository中去。</p>
-<p>但是，这里存在一个问题，就是我们如何把被fork的项目后续代码的更新同步到我们自己的repository中去呢。</p>
-<p>由于，我主要是使用git bash来进行git的相关操作，所以下面就讲述一下，如何通过git命令来实现，fork项目的代码同步问题。</p>
-        
-          <p class="article-more-link">
-            <a href="/2018/11/25/github中fork项目的更新/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/25/github中fork项目的更新/" data-id="cjqjjs6yr0001skvawu2m13gi" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github/">github</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Spring的Ioc容器之依赖注入管理" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/18/Spring的Ioc容器之依赖注入管理/" class="article-date">
-  <time datetime="2018-11-18T02:01:56.000Z" itemprop="datePublished">2018-11-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/18/Spring的Ioc容器之依赖注入管理/">Spring的Ioc容器之依赖注入管理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1-首先，我们来看下Spring的Ioc容器如何管理单一的对象</p>
-<p>我们先使用最原始的方式，xml配置来实现</p>
-<p>Bean对象的定义</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(<span class="keyword">int</span> id, String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"User&#123;"</span> +</span><br><span class="line">                <span class="string">"id="</span> + id +</span><br><span class="line">                <span class="string">", name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2018/11/18/Spring的Ioc容器之依赖注入管理/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/18/Spring的Ioc容器之依赖注入管理/" data-id="cjqjjs705000iskva5n4ivk0v" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring框架/">Spring框架</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -529,7 +643,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring框架/">Spring框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kubernetes/">Kubernetes</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring框架/">Spring框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a></li></ul>
     </div>
   </div>
 
@@ -539,7 +653,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Spring框架/" style="font-size: 15px;">Spring框架</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a>
+      <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Spring框架/" style="font-size: 15px;">Spring框架</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a>
     </div>
   </div>
 
@@ -561,23 +675,23 @@
       <ul>
         
           <li>
+            <a href="/2019/01/15/go语言中的Goroutine/">go语言中的Goroutine</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/12/k8s集群安装与配置/">k8s集群安装与配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/07/go语言中的测试和性能调优/">go语言中的测试和性能调优</a>
+          </li>
+        
+          <li>
             <a href="/2019/01/03/go语言中的错误处理和资源管理/">go语言中的错误处理和资源管理</a>
           </li>
         
           <li>
             <a href="/2019/01/01/go语言中的函数式编程/">go语言中的函数式编程</a>
-          </li>
-        
-          <li>
-            <a href="/2018/12/26/go语言中的接口/">go语言中的接口</a>
-          </li>
-        
-          <li>
-            <a href="/2018/12/18/go语言中的面相对象/">go语言中的面相对象</a>
-          </li>
-        
-          <li>
-            <a href="/2018/12/07/go语言中的容器/">go语言中的容器</a>
           </li>
         
       </ul>
